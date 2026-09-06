@@ -1,0 +1,88 @@
+{% extends "sales/base.html" %}
+
+{% block title %}Create an Account — Biashara OS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 2rem auto; padding: 2rem;">
+  <div style="text-align:center; margin-bottom: 1.5rem;">
+    <div class="brand-icon" style="width:44px; height:44px; font-size:1.3rem; margin:0 auto 0.75rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    </div>
+    <h1 style="font-size:1.5rem; margin:0 0 0.35rem;">Set Up Your Shop</h1>
+    <p style="color:var(--color-text-muted); font-size:0.88rem; margin:0;">Create your merchant owner account and launch your first business</p>
+  </div>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="form-group {% if form.username.errors %}has-error{% endif %}">
+      <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+      <input type="text" name="username" id="{{ form.username.id_for_label }}" class="input" placeholder="e.g. mama_neema" value="{{ form.username.value|default:'' }}" required autofocus>
+      <div class="form-help">Your display handle on the system. Letters, numbers, and underscores.</div>
+      {% for error in form.username.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+      <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+      <input type="email" name="email" id="{{ form.email.id_for_label }}" class="input" placeholder="e.g. merchant@example.com" value="{{ form.email.value|default:'' }}" required>
+      <div class="form-help">Used for account recovery and password resets.</div>
+      {% for error in form.email.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.phone.errors %}has-error{% endif %}">
+      <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+      <input type="tel" name="phone" id="{{ form.phone.id_for_label }}" class="input" placeholder="e.g. 0712345678" value="{{ form.phone.value|default:'' }}" required>
+      <div class="form-help">Your phone number is your primary login username.</div>
+      <div class="form-help">Your mobile contact number (also usable to sign in).</div>
+      {% for error in form.phone.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.password.errors %}has-error{% endif %}">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+        <label for="{{ form.password.id_for_label }}" style="margin:0;">{{ form.password.label }}</label>
+        <button type="button" class="password-toggle btn btn-secondary btn-sm" data-target="{{ form.password.id_for_label }}" style="padding:2px 6px; font-size:0.75rem;">Show</button>
+      </div>
+      <input type="password" name="password" id="{{ form.password.id_for_label }}" class="input" required>
+      {% for error in form.password.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.password_confirm.errors %}has-error{% endif %}">
+      <label for="{{ form.password_confirm.id_for_label }}">{{ form.password_confirm.label }}</label>
+      <input type="password" name="password_confirm" id="{{ form.password_confirm.id_for_label }}" class="input" required>
+      {% for error in form.password_confirm.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div style="border-top:1px dashed var(--color-border); margin:1.5rem 0 1.25rem; padding-top:1rem;">
+      <h2 style="font-size:1.05rem; margin:0 0 0.35rem; color:var(--color-primary);">Your First Business</h2>
+      <p style="font-size:0.82rem; color:var(--color-text-muted); margin:0 0 1rem;">Set up your store name and operating location</p>
+
+      <div class="form-group {% if form.business_name.errors %}has-error{% endif %}">
+        <label for="{{ form.business_name.id_for_label }}">{{ form.business_name.label }}</label>
+        <input type="text" name="business_name" id="{{ form.business_name.id_for_label }}" class="input" placeholder="e.g. Mama Neema Duka" value="{{ form.business_name.value|default:'' }}" required>
+        {% for error in form.business_name.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      <div class="form-group {% if form.business_location.errors %}has-error{% endif %}">
+        <label for="{{ form.business_location.id_for_label }}">{{ form.business_location.label }} <small style="font-weight:normal; color:var(--color-text-muted);">(optional)</small></label>
+        <input type="text" name="business_location" id="{{ form.business_location.id_for_label }}" class="input" placeholder="e.g. Kariakoo, Dar es Salaam" value="{{ form.business_location.value|default:'' }}">
+        {% for error in form.business_location.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:1.25rem;">
+      Create Account &amp; Launch Shop
+      Create Account &amp; Launch Shop &rarr;
+    </button>
+  </form>
+
+  <div style="text-align:center; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--color-border); font-size:0.88rem; color:var(--color-text-muted);">
+    Already have an account? <a href="{% url 'login' %}" style="font-weight:600;">Sign in here</a>
+  </div>
+</div>
+{% endblock %}

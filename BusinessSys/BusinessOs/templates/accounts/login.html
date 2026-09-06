@@ -1,0 +1,66 @@
+{% extends "sales/base.html" %}
+
+{% block title %}Sign In — Biashara OS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 420px; margin: 3rem auto; padding: 2rem;">
+<div class="card" style="max-width: 440px; margin: 3rem auto; padding: 2.25rem;">
+  <div style="text-align:center; margin-bottom: 1.5rem;">
+    <div class="brand-icon" style="width:44px; height:44px; font-size:1.3rem; margin:0 auto 0.75rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    <div class="brand-icon" style="width:48px; height:48px; font-size:1.4rem; margin:0 auto 0.75rem;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    </div>
+    <h1 style="font-size:1.5rem; margin:0 0 0.35rem;">Sign in to Biashara OS</h1>
+    <p style="color:var(--color-text-muted); font-size:0.88rem; margin:0;">Enter your phone number and password</p>
+    <h1 style="font-size:1.55rem; margin:0 0 0.35rem;">Sign in to Biashara OS</h1>
+    <p style="color:var(--color-text-muted); font-size:0.88rem; margin:0;">Enter your username, phone number, or email</p>
+  </div>
+
+  {% if form.errors %}
+  <div class="alert alert-danger">
+    <span>Invalid phone number or password. Please try again.</span>
+  <div class="alert alert-danger" style="margin-bottom:1.25rem;">
+    <span>Invalid credentials. Please verify your username, phone, or password and try again.</span>
+    <button type="button" class="alert-dismiss">&times;</button>
+  </div>
+  {% endif %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="id_username">Phone Number</label>
+      <input class="input" type="text" name="username" id="id_username" required autofocus placeholder="e.g. 0712345678" value="{{ form.username.value|default:'' }}">
+      <div class="form-help">Your registered contact number is your username.</div>
+      <label for="id_username">Username, Phone, or Email</label>
+      <input class="input" type="text" name="username" id="id_username" required autofocus placeholder="e.g. juma_kiosk, 0712345678, or user@email.com" value="{{ form.username.value|default:'' }}">
+      <div class="form-help">Sign in using your account username, registered phone number, or email.</div>
+    </div>
+
+    <div class="form-group">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+        <label for="id_password" style="margin:0;">Password</label>
+        <button type="button" class="password-toggle btn btn-secondary btn-sm" data-target="id_password" style="padding:2px 6px; font-size:0.75rem;">Show</button>
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <a href="{% url 'password_reset' %}" style="font-size:0.8rem; color:var(--color-primary); text-decoration:none; font-weight:500;">Forgot?</a>
+          <button type="button" class="password-toggle btn btn-secondary btn-sm" data-target="id_password" style="padding:2px 6px; font-size:0.75rem;">Show</button>
+        </div>
+      </div>
+      <input class="input" type="password" name="password" id="id_password" required>
+      <input class="input" type="password" name="password" id="id_password" required placeholder="Enter your password">
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:1.25rem;">
+      Sign In to Counter
+    <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:1.5rem;">
+      Sign In to Counter &rarr;
+    </button>
+  </form>
+
+  <div style="text-align:center; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--color-border); font-size:0.88rem; color:var(--color-text-muted);">
+    Don't have an account? <a href="{% url 'register' %}" style="font-weight:600;">Register a new shop</a>
+    Don't have an account yet? <a href="{% url 'register' %}" style="font-weight:600; color:var(--color-primary);">Register your shop</a>
+  </div>
+</div>
+{% endblock %}

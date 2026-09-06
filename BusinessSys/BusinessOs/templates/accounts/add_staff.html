@@ -1,0 +1,79 @@
+{% extends "sales/base.html" %}
+
+{% block title %}Add Staff Member — {{ business.name }}{% endblock %}
+{% block crumb %}Add Staff{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 520px; margin: 1.5rem auto;">
+  <div style="margin-bottom: 1rem;">
+    <a href="{% url 'staff_list' business.id %}" class="back-link" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.88rem; font-weight:600; color:var(--color-text-muted); text-decoration:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Staff Roster
+    </a>
+  </div>
+
+  <div class="card-header">
+    <div>
+      <h1 class="card-title">Add Staff Member</h1>
+      <div class="card-subtitle">Create login credentials and authorize a seller or cashier</div>
+    </div>
+  </div>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="form-group {% if form.username.errors %}has-error{% endif %}">
+      <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+      {{ form.username }}
+      <div class="form-help">Unique handle for staff sign in.</div>
+      {% for error in form.username.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+      <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+      {{ form.name }}
+      {% for error in form.name.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+      <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+      {{ form.email }}
+      {% for error in form.email.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.phone.errors %}has-error{% endif %}">
+      <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+      {{ form.phone }}
+      <div class="form-help">This will be their username to sign in to the counter.</div>
+      <div class="form-help">Their contact mobile number (can also be used to log in).</div>
+      {% for error in form.phone.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.password.errors %}has-error{% endif %}">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+        <label for="{{ form.password.id_for_label }}" style="margin:0;">{{ form.password.label }}</label>
+        <button type="button" class="password-toggle btn btn-secondary btn-sm" data-target="{{ form.password.id_for_label }}" style="padding:2px 6px; font-size:0.75rem;">Show</button>
+      </div>
+      {{ form.password }}
+      {% for error in form.password.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.role.errors %}has-error{% endif %}">
+      <label for="{{ form.role.id_for_label }}">{{ form.role.label }}</label>
+      {{ form.role }}
+      {% for error in form.role.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+      <button type="submit" class="btn btn-primary" style="flex:1;">Create Staff Account</button>
+      <a href="{% url 'staff_list' business.id %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

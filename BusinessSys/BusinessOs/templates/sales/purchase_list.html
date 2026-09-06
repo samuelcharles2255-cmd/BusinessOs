@@ -1,0 +1,114 @@
+{% extends "sales/base.html" %}
+
+{% block title %}Purchases &amp; Inbound Stock — {{ business.name }}{% endblock %}
+{% block crumb %}Purchases{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>Purchases &amp; Inbound Stock</h1>
+    <p>Track wholesale stock deliveries, supplier invoices, and accounts payable balances</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'record_purchase' business.id %}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Receive Stock (New Purchase)
+    </a>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="search-input-wrapper">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="text" class="search-input" placeholder="Search purchases by supplier or invoice #..." data-target="#purchases-table tbody tr">
+  </div>
+</div>
+
+{% if purchases %}
+<div class="table-container">
+  <table class="data-table" id="purchases-table">
+    <thead>
+      <tr>
+        <th>Purchase #</th>
+        <th>Date</th>
+        <th>Supplier</th>
+        <th>Invoice #</th>
+        <th class="table-num">Total Cost</th>
+        <th class="table-num">Amount Paid</th>
+        <th class="table-num">Balance Owed</th>
+        <th>Status</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for purchase in purchases %}
+      <tr>
+        <td>
+          <a href="{% url 'purchase_detail' purchase.id %}" style="font-weight:700;">#{{ purchase.id }}</a>
+        </td>
+        <td style="color:var(--color-text-muted); font-size:0.85rem;">
+          {{ purchase.purchase_date|date:"d M Y" }}
+        </td>
+        <td>
+          {% if purchase.supplier %}
+          <strong>{{ purchase.supplier.name }}</strong>
+          <div style="font-size:0.78rem; color:var(--color-text-muted);">{{ purchase.supplier.phone|default:"" }}</div>
+          {% else %}
+          <span style="color:var(--color-text-muted);">Unassigned supplier</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if purchase.invoice_no %}
+          <span class="badge badge-neutral" style="font-family:var(--font-mono);">{{ purchase.invoice_no }}</span>
+          {% else %}
+          <span style="color:var(--color-text-light); font-size:0.8rem;">None</span>
+          {% endif %}
+        </td>
+        <td class="table-num" style="font-weight:700;">{{ purchase.total_amount|floatformat:2 }}</td>
+        <td class="table-num" style="color:var(--color-success); font-weight:600;">{{ purchase.amount_paid|floatformat:2 }}</td>
+        <td class="table-num" style="{% if purchase.balance > 0 %}color:var(--color-danger); font-weight:700;{% endif %}">
+          {{ purchase.balance|floatformat:2 }}
+        </td>
+        <td>
+          <span class="badge badge-{{ purchase.status }}">{{ purchase.status|title }}</span>
+        </td>
+        <td style="text-align:right;">
+          <div style="display:inline-flex; gap:0.35rem;">
+            <a href="{% url 'purchase_detail' purchase.id %}" class="btn btn-secondary btn-sm" title="View details">Details</a>
+            {% if purchase.balance > 0 %}
+            <a href="{% url 'add_payment' business.id 'purchase' purchase.id %}" class="btn btn-primary btn-sm" title="Pay supplier">Pay</a>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if is_paginated %}
+<div style="display:flex; justify-content:center; gap:0.5rem; margin-top:1.25rem;">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">&larr; Previous</a>
+  {% endif %}
+  <span style="align-self:center; font-size:0.85rem; color:var(--color-text-muted);">
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+  </span>
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">Next &rarr;</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="card empty-state">
+  <div class="empty-state-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+  </div>
+  <h3>No purchases recorded yet</h3>
+  <p>Log incoming inventory deliveries from suppliers to keep stock counts and cost prices accurate.</p>
+  <a href="{% url 'record_purchase' business.id %}" class="btn btn-primary">+ Receive New Stock</a>
+</div>
+{% endif %}
+{% endblock %}
+

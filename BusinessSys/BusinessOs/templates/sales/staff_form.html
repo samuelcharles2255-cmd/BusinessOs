@@ -1,0 +1,20 @@
+{% extends "sales/base.html" %}
+{% block title %}Add staff — {{ business.name }}{% endblock %}
+{% block crumb %}Add staff{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Add staff</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-row {% if field.errors %}has-error{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% for error in field.errors %}<p class="error">{{ error }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    {% if form.non_field_errors %}<div class="error banner">{{ form.non_field_errors }}</div>{% endif %}
+    <button type="submit" class="btn btn-primary btn-block">Add</button>
+  </form>
+</div>
+{% endblock %}

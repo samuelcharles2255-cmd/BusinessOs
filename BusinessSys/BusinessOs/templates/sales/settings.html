@@ -1,0 +1,142 @@
+{% extends "sales/base.html" %}
+
+{% block title %}Settings — {{ business.name }}{% endblock %}
+{% block crumb %}Settings{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+  <!-- Directional Nav -->
+  <div style="margin-bottom: 1.25rem;">
+    <a href="{% url 'business_dashboard' business.id %}" class="back-link" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.88rem; font-weight:600; color:var(--color-text-muted); text-decoration:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Dashboard
+    </a>
+  </div>
+
+  <div class="page-header" style="margin-bottom: 1.5rem;">
+    <div class="page-title-group">
+      <h1>Business Settings</h1>
+      <p>Manage store preferences, language, appearance, and shop configuration</p>
+    </div>
+  </div>
+
+  <!-- Business Profile Card -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title" style="font-size:1.15rem;">Store Profile</h2>
+        <div class="card-subtitle">Public shop details displayed on receipts and staff dashboards</div>
+      </div>
+    </div>
+
+    {% if is_owner %}
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+        <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+        {{ form.name }}
+        {% for error in form.name.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      <div class="form-group {% if form.location.errors %}has-error{% endif %}">
+        <label for="{{ form.location.id_for_label }}">{{ form.location.label }}</label>
+        {{ form.location }}
+        {% for error in form.location.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      <div class="form-group {% if form.phone.errors %}has-error{% endif %}">
+        <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+        {{ form.phone }}
+        {% for error in form.phone.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        Save Changes
+      </button>
+    </form>
+    {% else %}
+    <div style="font-size:0.9rem; color:var(--color-text-muted);">
+      <p><strong>Store Name:</strong> {{ business.name }}</p>
+      <p><strong>Location:</strong> {{ business.location|default:"Not specified" }}</p>
+      <p><strong>Phone:</strong> {{ business.phone|default:"Not specified" }}</p>
+      <small>Note: Only the business owner can edit store profile details.</small>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Regional & Language Preferences -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title" style="font-size:1.15rem;">Language &amp; Region</h2>
+        <div class="card-subtitle">Select your preferred display language for navigation and labels</div>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; padding:0.5rem 0;">
+      <div>
+        <div style="font-weight:600; font-size:1rem; margin-bottom:0.25rem;">Interface Language</div>
+        <div style="font-size:0.85rem; color:var(--color-text-muted);">Choose between English and Kiswahili (Swahili)</div>
+      </div>
+
+      <div style="display:inline-flex; border:1px solid var(--color-border); border-radius:var(--radius-sm); overflow:hidden; background:var(--color-surface);">
+        <a href="{% url 'set_language' %}?lang=en" class="btn btn-sm {% if current_lang == 'en' %}btn-primary{% else %}btn-secondary{% endif %}" style="border:none; border-radius:0; padding:0.4rem 1rem;">
+          English
+        </a>
+        <a href="{% url 'set_language' %}?lang=sw" class="btn btn-sm {% if current_lang == 'sw' %}btn-primary{% else %}btn-secondary{% endif %}" style="border:none; border-radius:0; padding:0.4rem 1rem;">
+          Kiswahili
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appearance / Theme -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title" style="font-size:1.15rem;">Appearance &amp; Theme</h2>
+        <div class="card-subtitle">Personalize your color scheme for optimal visibility at the counter</div>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; padding:0.5rem 0;">
+      <div>
+        <div style="font-weight:600; font-size:1rem; margin-bottom:0.25rem;">Theme Mode</div>
+        <div style="font-size:0.85rem; color:var(--color-text-muted);">Switch between daylight mode and dark mode</div>
+      </div>
+
+      <button type="button" class="btn btn-secondary theme-toggle-btn" style="display:inline-flex; align-items:center; gap:0.5rem;">
+        <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <span class="theme-toggle-label">Toggle Dark Mode</span>
+      </button>
+    </div>
+  </div>
+
+  {% if is_owner %}
+  <!-- Danger Zone -->
+  <div class="card" style="border: 1px solid var(--color-debt); margin-bottom: 2rem;">
+    <div class="card-header" style="border-bottom-color: rgba(239, 68, 68, 0.15);">
+      <div>
+        <h2 class="card-title" style="color:var(--color-debt); font-size:1.15rem;">Danger Zone</h2>
+        <div class="card-subtitle">Permanent actions that cannot be reversed</div>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding:0.5rem 0;">
+      <div>
+        <div style="font-weight:600; color:var(--color-text); margin-bottom:0.25rem;">Delete this Business</div>
+        <div style="font-size:0.85rem; color:var(--color-text-muted); max-width:480px;">
+          Permanently remove <strong>{{ business.name }}</strong> and all associated products, sales, purchases, customer debts, and financial records.
+        </div>
+      </div>
+
+      <a href="{% url 'business_delete' business.id %}" class="btn btn-danger">
+        Delete Business &rarr;
+      </a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+

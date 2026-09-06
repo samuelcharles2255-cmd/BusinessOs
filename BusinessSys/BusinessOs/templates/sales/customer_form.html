@@ -1,0 +1,49 @@
+{% extends "sales/base.html" %}
+
+{% block title %}{% if customer %}Edit {{ customer.name }}{% else %}New Customer{% endif %} — {{ business.name }}{% endblock %}
+{% block crumb %}{% if customer %}Edit Customer{% else %}New Customer{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 1.5rem auto;">
+<div style="max-width: 500px; margin: 0.5rem auto 0;">
+  <a href="{% url 'customer_list' business.id %}" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Back to Customer Directory
+  </a>
+</div>
+
+<div class="card" style="max-width: 500px; margin: 0.5rem auto 1.5rem;">
+  <div class="card-header">
+    <div>
+      <h1 class="card-title">{% if customer %}Edit Customer{% else %}Add New Customer{% endif %}</h1>
+      <div class="card-subtitle">Manage customer profile and contact phone number</div>
+    </div>
+  </div>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+      <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+      {{ form.name }}
+      {% for error in form.name.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="form-group {% if form.phone.errors %}has-error{% endif %}">
+      <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+      {{ form.phone }}
+      <div class="form-help">Local format accepted (e.g. 0712345678)</div>
+      {% for error in form.phone.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+      <button type="submit" class="btn btn-primary" style="flex:1;">Save Customer</button>
+      <a href="{% url 'customer_list' business.id %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

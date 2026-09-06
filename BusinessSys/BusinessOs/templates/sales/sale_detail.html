@@ -1,0 +1,149 @@
+{% extends "sales/base.html" %}
+
+{% block title %}Sale #{{ sale.id }} — {{ business.name }}{% endblock %}
+{% block crumb %}Sale #{{ sale.id }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 0.75rem;">
+  <a href="{% url 'sale_list' sale.business.id %}" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Back to Sales History
+  </a>
+</div>
+
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>Sale Order #{{ sale.id }}</h1>
+    <p>Recorded on {{ sale.created_at|date:"d M Y, H:i" }}{% if sale.recorded_by %} by {{ sale.recorded_by.get_username }}{% endif %}</p>
+  </div>
+  <div class="page-actions">
+    <button type="button" class="btn btn-secondary" data-action="print">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      Print Receipt
+    </button>
+    {% if sale.balance > 0 %}
+    <a href="{% url 'add_payment' sale.business.id 'sale' sale.id %}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      Record Payment
+    </a>
+    {% endif %}
+    <a href="{% url 'record_sale_return' sale.id %}" class="btn btn-danger">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+      Process Return
+    </a>
+  </div>
+</div>
+
+<!-- Receipt Card Container -->
+<div class="receipt-card">
+  <!-- Business Header -->
+  <div class="receipt-header">
+    <h2>{{ business.name }}</h2>
+    <p>{{ business.location|default:"Retail & Wholesale Goods" }}</p>
+    {% if business.phone %}<p>Tel: {{ business.phone }}</p>{% endif %}
+    <div style="margin-top:0.75rem; display:flex; justify-content:center; gap:0.5rem; align-items:center;">
+      <span style="font-weight:700;">Receipt #{{ sale.id }}</span>
+      <span class="badge badge-{{ sale.status }}">{{ sale.status|title }}</span>
+    </div>
+    <p style="font-size:0.8rem; margin-top:0.25rem;">{{ sale.created_at|date:"d M Y H:i" }}</p>
+  </div>
+
+  <!-- Customer Info if Available -->
+  {% if sale.customer %}
+  <div style="background:var(--color-surface-subtle); border-radius:var(--radius-sm); padding:0.65rem 0.85rem; margin-bottom:1.25rem; font-size:0.88rem;">
+    <div style="font-weight:700; color:var(--color-text);">Customer: {{ sale.customer.name }}</div>
+    {% if sale.customer.phone %}
+    <div style="color:var(--color-text-muted);">Phone: {{ sale.customer.phone }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- Line Items Table -->
+  <table class="data-table" style="margin-bottom:1.25rem;">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th style="text-align:center;">Qty</th>
+        <th class="table-num">Price</th>
+        <th class="table-num">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in sale.items.all %}
+      <tr>
+        <td>
+          <strong>{{ item.product.name }}</strong>
+        </td>
+        <td style="text-align:center;">{{ item.quantity }}</td>
+        <td class="table-num">{{ item.unit_price|floatformat:2 }}</td>
+        <td class="table-num" style="font-weight:700;">{{ item.subtotal|floatformat:2 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Totals Breakdown -->
+  <div class="totals-breakdown">
+    <div class="totals-row">
+      <span>Subtotal</span>
+      <span>{{ sale.total_amount|floatformat:2 }}</span>
+    </div>
+    <div class="totals-row">
+      <span>Amount Paid</span>
+      <span style="color:var(--color-success); font-weight:700;">{{ sale.amount_paid|floatformat:2 }}</span>
+    </div>
+    {% if sale.balance > 0 %}
+    <div class="totals-row balance-due" style="border-top: 1px solid var(--color-border); margin-top:0.35rem; padding-top:0.35rem;">
+      <span>Balance Owed</span>
+      <span>{{ sale.balance|floatformat:2 }}</span>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Payments Recorded History -->
+  <div style="margin-top:1.5rem;">
+    <h3 style="font-size:0.95rem; margin:0 0 0.5rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--color-text-muted);">
+      Payment Transactions
+    </h3>
+    <ul style="list-style:none; padding:0; margin:0; font-size:0.88rem; display:flex; flex-direction:column; gap:0.4rem;">
+      {% for payment in sale.payments.all %}
+      <li style="display:flex; justify-content:space-between; align-items:center; padding:0.45rem 0.65rem; background:var(--color-surface-subtle); border-radius:var(--radius-xs);">
+        <div>
+          <span style="font-weight:600;">{{ payment.get_method_display }}</span>
+          {% if payment.reference %}<span style="color:var(--color-text-muted); font-size:0.8rem;">({{ payment.reference }})</span>{% endif %}
+          <div style="font-size:0.75rem; color:var(--color-text-light);">{{ payment.created_at|date:"d M Y, H:i" }}</div>
+        </div>
+        <strong style="color:var(--color-success);">+{{ payment.amount|floatformat:2 }}</strong>
+      </li>
+      {% empty %}
+      <li style="color:var(--color-text-muted); font-size:0.85rem; padding:0.35rem 0;">No payments recorded yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Returns History if Any -->
+  {% if sale.returns.all %}
+  <div style="margin-top:1.5rem; border-top:1px dashed var(--color-danger-border); padding-top:1rem;">
+    <h3 style="font-size:0.95rem; margin:0 0 0.5rem; color:var(--color-danger); text-transform:uppercase; letter-spacing:0.04em;">
+      Returns Processed
+    </h3>
+    <ul style="list-style:none; padding:0; margin:0; font-size:0.88rem; display:flex; flex-direction:column; gap:0.4rem;">
+      {% for ret in sale.returns.all %}
+      <li style="display:flex; justify-content:space-between; align-items:center; padding:0.45rem 0.65rem; background:var(--color-danger-bg); border-radius:var(--radius-xs);">
+        <div>
+          <span>Return on {{ ret.return_date|date:"d M Y" }}</span>
+          {% if ret.discount > 0 %}<div style="font-size:0.75rem; color:var(--color-text-muted);">Restocking fee: {{ ret.discount|floatformat:2 }}</div>{% endif %}
+        </div>
+        <strong style="color:var(--color-danger);">-{{ ret.refund_amount|floatformat:2 }}</strong>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="receipt-footer">
+    <p>Thank you for your business!</p>
+    <p style="font-size:0.75rem;">Powered by Biashara OS</p>
+  </div>
+</div>
+{% endblock %}

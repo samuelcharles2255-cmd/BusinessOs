@@ -1,0 +1,165 @@
+{% extends "sales/base.html" %}
+{% load static %}
+
+{% block title %}Record a Sale — {{ business.name }}{% endblock %}
+{% block crumb %}Record Sale{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 0.75rem;">
+  <a href="{% url 'sale_list' business.id %}" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Back to Sales History
+  </a>
+</div>
+
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>Record Sale (POS)</h1>
+    <p>Fast counter sale recording with real-time stock bounds and debt tracking</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'sale_list' business.id %}" class="btn btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+      Sales History
+    </a>
+  </div>
+</div>
+
+{% if error %}
+<div class="alert alert-danger">
+  <span>{{ error }}</span>
+  <button type="button" class="alert-dismiss">&times;</button>
+</div>
+{% endif %}
+
+{% if not products %}
+<div class="card empty-state">
+  <div class="empty-state-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+  </div>
+  <h3>No products in catalog</h3>
+  <p>You need to add at least one product before you can record sales.</p>
+  <a href="{% url 'product_create' business.id %}" class="btn btn-primary">+ Add a Product</a>
+</div>
+{% else %}
+<form method="post" id="sale-form" novalidate>
+  {% csrf_token %}
+
+  <div class="pos-grid">
+    <!-- Left Column: Line Items -->
+    <div class="pos-items-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h2 style="margin:0; font-size:1.15rem;">Line Items</h2>
+        <button type="button" id="add-row" class="btn btn-secondary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add Product
+        </button>
+      </div>
+
+      <div class="table-container" style="box-shadow:none; border:none; margin:0;">
+        <table class="data-table" id="line-items-table">
+          <thead>
+            <tr>
+              <th style="min-width:240px;">Product</th>
+              <th style="width:110px;">Qty</th>
+              <th class="table-num" style="width:120px;">Price</th>
+              <th class="table-num" style="width:120px;">Subtotal</th>
+              <th style="width:40px;"></th>
+            </tr>
+          </thead>
+          <tbody id="line-items-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Row Template for Client JavaScript -->
+      <template id="row-template">
+        <tr class="line-item-row">
+          <td>
+            <select name="product_id" class="input product-select" required>
+              <option value="">Select product…</option>
+              {% for product in products %}
+              <option value="{{ product.id }}"
+                      data-price="{{ product.selling_price }}"
+                      data-stock="{{ product.stock_quantity }}">
+                {{ product.name }} — {{ product.selling_price|floatformat:2 }} ({{ product.stock_quantity }} in stock)
+              </option>
+              {% endfor %}
+            </select>
+            <div class="stock-warn" style="font-size:0.75rem; color:var(--color-danger); margin-top:2px;"></div>
+          </td>
+          <td>
+            <input type="number" name="quantity" class="input qty-input" min="1" value="1" required style="text-align:center;">
+          </td>
+          <td class="table-num unit-price" style="color:var(--color-text-muted);">0.00</td>
+          <td class="table-num row-subtotal" style="font-weight:700;">0.00</td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm btn-remove-row" title="Remove item" aria-label="Remove item" style="padding:4px 8px;">✕</button>
+          </td>
+        </tr>
+      </template>
+    </div>
+
+    <!-- Right Column: Payment & Settlement Summary -->
+    <div class="pos-summary-card">
+      <h2 style="margin:0 0 1rem; font-size:1.15rem;">Checkout & Settlement</h2>
+
+      <div class="totals-breakdown" style="border-top:none; margin-top:0; padding-top:0;">
+        <div class="totals-row grand-total">
+          <span>Total</span>
+          <span id="sale-total">0.00</span>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:1.25rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+          <label for="id_amount_received" style="margin:0;">Amount Received</label>
+          <button type="button" id="pay-exact-btn" class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:2px 6px;">Pay Exact</button>
+        </div>
+        <input type="number" step="0.01" min="0" name="amount_received" id="id_amount_received" class="input" value="0" required style="font-size:1.2rem; font-weight:700;">
+      </div>
+
+      <!-- Dynamic Customer Debt Banner -->
+      <div id="balance-row" hidden class="debt-callout">
+        <div class="debt-callout-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          Balance Owed by Customer
+        </div>
+        <div style="font-size:1.3rem; font-weight:800; color:var(--color-warning-text); font-feature-settings:'tnum';" id="sale-balance">0.00</div>
+      </div>
+
+      <!-- Conditional Customer Info (revealed when there is a balance) -->
+      <div id="customer-fields" hidden style="background:var(--color-surface-subtle); border:1px solid var(--color-border); border-radius:var(--radius-sm); padding:0.85rem; margin-bottom:1rem;">
+        <p style="margin:0 0 0.6rem; font-size:0.82rem; color:var(--color-text-muted);">This order has a balance. Record debtor details:</p>
+        <div class="form-group">
+          <label for="id_customer_name">Customer Name</label>
+          <input type="text" name="customer_name" id="id_customer_name" class="input" placeholder="e.g. Amina Hassan">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="id_customer_phone">Customer Phone</label>
+          <input type="tel" name="customer_phone" id="id_customer_phone" class="input" placeholder="e.g. 0712345678">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_payment_method">Payment Method</label>
+        <select name="payment_method" id="id_payment_method" class="input">
+          <option value="cash">Cash</option>
+          <option value="mpesa">M-Pesa</option>
+          <option value="tigopesa">Tigo Pesa</option>
+          <option value="airtelmoney">Airtel Money</option>
+          <option value="halopesa">Halopesa</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit-sale" style="margin-top:1rem;">
+        Complete &amp; Record Sale
+      </button>
+    </div>
+  </div>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'sales/js/record_sale.js' %}"></script>
+{% endblock %}
