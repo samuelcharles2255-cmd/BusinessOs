@@ -5,138 +5,273 @@
 
 {% block content %}
 <div style="max-width: 800px; margin: 0 auto;">
-  <!-- Directional Nav -->
+
+  <!-- Back navigation -->
   <div style="margin-bottom: 1.25rem;">
     <a href="{% url 'business_dashboard' business.id %}" class="back-link" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.88rem; font-weight:600; color:var(--color-text-muted); text-decoration:none;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
       Back to Dashboard
     </a>
   </div>
 
-  <div class="page-header" style="margin-bottom: 1.5rem;">
+  <!-- Page header -->
+  <div class="page-header" style="margin-bottom: 1.75rem;">
     <div class="page-title-group">
-      <h1>Business Settings</h1>
-      <p>Manage store preferences, language, appearance, and shop configuration</p>
+      <h1 style="font-size:1.65rem; font-weight:800; letter-spacing:-0.02em; margin:0 0 0.35rem;">Business Settings</h1>
+      <p style="color:var(--color-text-muted); font-size:0.9rem; margin:0;">Manage store preferences, language, appearance, and shop configuration</p>
     </div>
   </div>
 
-  <!-- Business Profile Card -->
-  <div class="card" style="margin-bottom: 1.5rem;">
-    <div class="card-header">
+  <!-- ═══ STORE PROFILE CARD ═══════════════════════════════════ -->
+  <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+    <div class="card-header" style="padding:0 0 1rem 0; margin-bottom:1.25rem; border-bottom:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:flex-start;">
       <div>
-        <h2 class="card-title" style="font-size:1.15rem;">Store Profile</h2>
-        <div class="card-subtitle">Public shop details displayed on receipts and staff dashboards</div>
+        <h2 class="card-title" style="font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; margin:0 0 0.25rem;">
+          <i data-lucide="store" style="width:18px;height:18px; color:var(--color-primary);"></i>
+          Store Profile
+        </h2>
+        <div class="card-subtitle" style="font-size:0.85rem; color:var(--color-text-muted);">
+          Public shop details displayed on receipts and staff dashboards
+        </div>
       </div>
+      {% if not is_owner %}
+      <span style="font-size:0.78rem; color:var(--color-text-muted); background:var(--color-surface-subtle); padding:3px 10px; border-radius:var(--radius-full); border:1px solid var(--color-border);">
+        View only
+      </span>
+      {% endif %}
     </div>
 
     {% if is_owner %}
     <form method="post" novalidate>
       {% csrf_token %}
 
-      <div class="form-group {% if form.name.errors %}has-error{% endif %}">
-        <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
-        {{ form.name }}
-        {% for error in form.name.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+      <div style="display:grid; gap:1.25rem;">
+        <div class="form-group {% if form.name.errors %}has-error{% endif %}" style="margin:0;">
+          <label for="{{ form.name.id_for_label }}" style="display:flex; align-items:center; gap:0.35rem;">
+            <i data-lucide="briefcase" style="width:14px;height:14px;"></i>
+            {{ form.name.label }}
+          </label>
+          {{ form.name }}
+          {% for error in form.name.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="form-group {% if form.location.errors %}has-error{% endif %}" style="margin:0;">
+          <label for="{{ form.location.id_for_label }}" style="display:flex; align-items:center; gap:0.35rem;">
+            <i data-lucide="map-pin" style="width:14px;height:14px;"></i>
+            {{ form.location.label }}
+          </label>
+          {{ form.location }}
+          {% for error in form.location.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="form-group {% if form.phone.errors %}has-error{% endif %}" style="margin:0;">
+          <label for="{{ form.phone.id_for_label }}" style="display:flex; align-items:center; gap:0.35rem;">
+            <i data-lucide="phone" style="width:14px;height:14px;"></i>
+            {{ form.phone.label }}
+          </label>
+          {{ form.phone }}
+          {% for error in form.phone.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+        </div>
       </div>
 
-      <div class="form-group {% if form.location.errors %}has-error{% endif %}">
-        <label for="{{ form.location.id_for_label }}">{{ form.location.label }}</label>
-        {{ form.location }}
-        {% for error in form.location.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+      <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--color-border);">
+        <button type="submit" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:0.4rem;">
+          <i data-lucide="save" style="width:15px;height:15px;"></i>
+          Save Changes
+        </button>
       </div>
-
-      <div class="form-group {% if form.phone.errors %}has-error{% endif %}">
-        <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-        {{ form.phone }}
-        {% for error in form.phone.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
-      </div>
-
-      <button type="submit" class="btn btn-primary">
-        Save Changes
-      </button>
     </form>
     {% else %}
-    <div style="font-size:0.9rem; color:var(--color-text-muted);">
-      <p><strong>Store Name:</strong> {{ business.name }}</p>
-      <p><strong>Location:</strong> {{ business.location|default:"Not specified" }}</p>
-      <p><strong>Phone:</strong> {{ business.phone|default:"Not specified" }}</p>
-      <small>Note: Only the business owner can edit store profile details.</small>
+    <div style="font-size:0.9rem; color:var(--color-text-muted); display:grid; gap:0.75rem;">
+      <div style="display:flex; gap:0.6rem; align-items:center;">
+        <i data-lucide="briefcase" style="width:15px;height:15px; flex-shrink:0; color:var(--color-primary);"></i>
+        <span><strong>Store Name:</strong> {{ business.name }}</span>
+      </div>
+      <div style="display:flex; gap:0.6rem; align-items:center;">
+        <i data-lucide="map-pin" style="width:15px;height:15px; flex-shrink:0; color:var(--color-primary);"></i>
+        <span><strong>Location:</strong> {{ business.location|default:"Not specified" }}</span>
+      </div>
+      <div style="display:flex; gap:0.6rem; align-items:center;">
+        <i data-lucide="phone" style="width:15px;height:15px; flex-shrink:0; color:var(--color-primary);"></i>
+        <span><strong>Phone:</strong> {{ business.phone|default:"Not specified" }}</span>
+      </div>
+      <small style="color:var(--color-text-muted); margin-top:0.25rem;">Only the business owner can edit store profile details.</small>
     </div>
     {% endif %}
   </div>
 
-  <!-- Regional & Language Preferences -->
-  <div class="card" style="margin-bottom: 1.5rem;">
-    <div class="card-header">
-      <div>
-        <h2 class="card-title" style="font-size:1.15rem;">Language &amp; Region</h2>
-        <div class="card-subtitle">Select your preferred display language for navigation and labels</div>
+  <!-- ═══ LANGUAGE & REGION ══════════════════════════════════════ -->
+  <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+    <div class="card-header" style="padding:0 0 1rem 0; margin-bottom:1.25rem; border-bottom:1px solid var(--color-border);">
+      <h2 class="card-title" style="font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; margin:0 0 0.25rem;">
+        <i data-lucide="languages" style="width:18px;height:18px; color:var(--color-primary);"></i>
+        Language &amp; Region
+      </h2>
+      <div class="card-subtitle" style="font-size:0.85rem; color:var(--color-text-muted);">
+        Select your preferred display language for navigation and labels
       </div>
     </div>
 
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; padding:0.5rem 0;">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
       <div>
         <div style="font-weight:600; font-size:1rem; margin-bottom:0.25rem;">Interface Language</div>
-        <div style="font-size:0.85rem; color:var(--color-text-muted);">Choose between English and Kiswahili (Swahili)</div>
+        <div style="font-size:0.85rem; color:var(--color-text-muted);">
+          Currently: <strong>{% if current_lang == 'sw' %}Kiswahili{% else %}English{% endif %}</strong>
+        </div>
       </div>
 
-      <div style="display:inline-flex; border:1px solid var(--color-border); border-radius:var(--radius-sm); overflow:hidden; background:var(--color-surface);">
-        <a href="{% url 'set_language' %}?lang=en" class="btn btn-sm {% if current_lang == 'en' %}btn-primary{% else %}btn-secondary{% endif %}" style="border:none; border-radius:0; padding:0.4rem 1rem;">
-          English
+      <div style="display:inline-flex; gap:0.6rem;">
+        <a href="{% url 'set_language' %}?lang=en"
+           class="btn {% if current_lang != 'sw' %}btn-primary{% else %}btn-secondary{% endif %}"
+           style="display:inline-flex; align-items:center; gap:0.4rem;">
+          <span>🇬🇧</span> English
+          {% if current_lang != 'sw' %}
+          <i data-lucide="check" style="width:14px;height:14px;"></i>
+          {% endif %}
         </a>
-        <a href="{% url 'set_language' %}?lang=sw" class="btn btn-sm {% if current_lang == 'sw' %}btn-primary{% else %}btn-secondary{% endif %}" style="border:none; border-radius:0; padding:0.4rem 1rem;">
-          Kiswahili
+        <a href="{% url 'set_language' %}?lang=sw"
+           class="btn {% if current_lang == 'sw' %}btn-primary{% else %}btn-secondary{% endif %}"
+           style="display:inline-flex; align-items:center; gap:0.4rem;">
+          <span>🇹🇿</span> Kiswahili
+          {% if current_lang == 'sw' %}
+          <i data-lucide="check" style="width:14px;height:14px;"></i>
+          {% endif %}
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Appearance / Theme -->
-  <div class="card" style="margin-bottom: 1.5rem;">
-    <div class="card-header">
-      <div>
-        <h2 class="card-title" style="font-size:1.15rem;">Appearance &amp; Theme</h2>
-        <div class="card-subtitle">Personalize your color scheme for optimal visibility at the counter</div>
+  <!-- ═══ APPEARANCE / THEME ══════════════════════════════════════ -->
+  <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+    <div class="card-header" style="padding:0 0 1rem 0; margin-bottom:1.25rem; border-bottom:1px solid var(--color-border);">
+      <h2 class="card-title" style="font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; margin:0 0 0.25rem;">
+        <i data-lucide="palette" style="width:18px;height:18px; color:var(--color-primary);"></i>
+        Appearance &amp; Theme
+      </h2>
+      <div class="card-subtitle" style="font-size:0.85rem; color:var(--color-text-muted);">
+        Personalize your color scheme for optimal visibility at the counter
       </div>
     </div>
 
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; padding:0.5rem 0;">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
       <div>
         <div style="font-weight:600; font-size:1rem; margin-bottom:0.25rem;">Theme Mode</div>
-        <div style="font-size:0.85rem; color:var(--color-text-muted);">Switch between daylight mode and dark mode</div>
+        <div style="font-size:0.85rem; color:var(--color-text-muted);">Switch between daylight and dark mode</div>
       </div>
 
-      <button type="button" class="btn btn-secondary theme-toggle-btn" style="display:inline-flex; align-items:center; gap:0.5rem;">
-        <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-        <span class="theme-toggle-label">Toggle Dark Mode</span>
+      <button type="button" class="btn btn-secondary" style="display:inline-flex; align-items:center; gap:0.5rem;" onclick="toggleTheme()">
+        <i data-lucide="sun" class="theme-icon-light" style="width:16px;height:16px;"></i>
+        <i data-lucide="moon" class="theme-icon-dark" style="width:16px;height:16px; display:none;"></i>
+        <span class="theme-toggle-label">Toggle Dark / Light</span>
       </button>
     </div>
   </div>
 
   {% if is_owner %}
-  <!-- Danger Zone -->
-  <div class="card" style="border: 1px solid var(--color-debt); margin-bottom: 2rem;">
-    <div class="card-header" style="border-bottom-color: rgba(239, 68, 68, 0.15);">
+  <!-- ═══ DANGER ZONE ══════════════════════════════════════════════ -->
+  <div class="card" style="border:1px solid var(--color-danger-border); margin-bottom:2rem; padding:1.5rem;"
+       x-data="{ showDeleteModal: false, confirmName: '' }">
+    <div class="card-header" style="padding:0 0 1rem 0; margin-bottom:1.25rem; border-bottom:1px solid rgba(239,68,68,0.15);">
       <div>
-        <h2 class="card-title" style="color:var(--color-debt); font-size:1.15rem;">Danger Zone</h2>
-        <div class="card-subtitle">Permanent actions that cannot be reversed</div>
+        <h2 class="card-title" style="color:var(--color-danger); font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; margin:0 0 0.25rem;">
+          <i data-lucide="alert-triangle" style="width:18px;height:18px;"></i>
+          Danger Zone
+        </h2>
+        <div class="card-subtitle" style="font-size:0.85rem; color:var(--color-text-muted);">
+          Permanent actions that cannot be reversed
+        </div>
       </div>
     </div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding:0.5rem 0;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
       <div>
         <div style="font-weight:600; color:var(--color-text); margin-bottom:0.25rem;">Delete this Business</div>
-        <div style="font-size:0.85rem; color:var(--color-text-muted); max-width:480px;">
-          Permanently remove <strong>{{ business.name }}</strong> and all associated products, sales, purchases, customer debts, and financial records.
+        <div style="font-size:0.85rem; color:var(--color-text-muted); max-width:480px; line-height:1.5;">
+          Permanently remove <strong>{{ business.name }}</strong> and all associated products,
+          sales, purchases, customer debts, and financial records.
         </div>
       </div>
 
-      <a href="{% url 'business_delete' business.id %}" class="btn btn-danger">
-        Delete Business &rarr;
-      </a>
+      <button type="button"
+              class="btn btn-danger"
+              style="display:inline-flex; align-items:center; gap:0.4rem;"
+              @click="showDeleteModal = true">
+        <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+        Delete Business
+      </button>
+    </div>
+
+    <!-- ── Inline Alpine Delete Confirmation Modal ─────────────── -->
+    <div x-show="showDeleteModal"
+         x-cloak
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="modal-overlay"
+         @keydown.escape.window="showDeleteModal = false"
+         @click.self="showDeleteModal = false"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="deleteModalTitle">
+
+      <div class="modal-dialog"
+           x-show="showDeleteModal"
+           x-transition:enter="transition ease-out duration-200"
+           x-transition:enter-start="opacity-0 scale-95"
+           x-transition:enter-end="opacity-100 scale-100"
+           x-transition:leave="transition ease-in duration-150"
+           x-transition:leave-start="opacity-100 scale-100"
+           x-transition:leave-end="opacity-0 scale-95">
+
+        <div class="modal-icon modal-icon--danger">
+          <i data-lucide="trash-2" style="width:24px;height:24px;"></i>
+        </div>
+
+        <h3 class="modal-title" id="deleteModalTitle">Delete "{{ business.name }}"?</h3>
+        <p class="modal-message">
+          This will permanently erase <strong>all data</strong> — products, sales history, customer records, purchases, expenses, and staff. This action <strong>cannot be undone</strong>.
+        </p>
+
+        <!-- Confirmation input -->
+        <div style="margin-bottom:1.25rem; text-align:left;">
+          <label style="font-size:0.82rem; color:var(--color-text-muted); font-weight:600; display:block; margin-bottom:0.4rem;">
+            Type <strong style="color:var(--color-danger);">{{ business.name }}</strong> to confirm:
+          </label>
+          <input type="text"
+                 x-model="confirmName"
+                 class="input"
+                 placeholder="{{ business.name }}"
+                 style="border-color:var(--color-danger-border);">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" @click="showDeleteModal = false">
+            <i data-lucide="x" style="width:14px;height:14px;"></i>
+            Cancel
+          </button>
+          <a :href="confirmName === '{{ business.name|escapejs }}' ? '{% url 'business_delete' business.id %}' : '#'"
+             class="btn"
+             :class="confirmName === '{{ business.name|escapejs }}' ? 'btn-danger' : 'btn-secondary'"
+             :style="confirmName !== '{{ business.name|escapejs }}' ? 'opacity:0.5; cursor:not-allowed; pointer-events:none;' : ''">
+            <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+            Yes, Delete Permanently
+          </a>
+        </div>
+      </div>
     </div>
   </div>
   {% endif %}
+
 </div>
 {% endblock %}
 
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.lucide) lucide.createIcons();
+});
+</script>
+{% endblock %}

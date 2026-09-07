@@ -315,11 +315,6 @@ SaleItemFormSet = forms.inlineformset_factory(
 # ---------------------------------------------------------------------------
 
 class RegisterForm(forms.Form):
-    phone = forms.CharField(max_length=20, label="Phone number")
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm password")
-    business_name = forms.CharField(max_length=150, label="Business name")
-    business_location = forms.CharField(max_length=200, required=False, label="Location")
     username = forms.CharField(
         max_length=150,
         label="Username",
@@ -395,10 +390,6 @@ class RegisterForm(forms.Form):
 
 
 class AddStaffForm(forms.Form):
-    name = forms.CharField(max_length=150, label="Staff member's name")
-    phone = forms.CharField(max_length=20, label="Their phone number")
-    password = forms.CharField(widget=forms.PasswordInput, label="Set their password")
-    role = forms.ChoiceField(choices=BusinessStaff.ROLE_CHOICES, initial=BusinessStaff.SELLER)
     username = forms.CharField(
         max_length=150,
         label="Staff username",

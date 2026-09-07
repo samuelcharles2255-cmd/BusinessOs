@@ -35,6 +35,7 @@ Requires:
     settings.GEMINI_API_KEY = "<your key>"   (or GEMINI_API_KEY in the env)
 """
 import json
+import logging
 import re
 
 from django.conf import settings
@@ -50,18 +51,15 @@ from google.genai import types
 from .prompts import build_system_instruction
 from .tools import PERIOD_CHOICES, BusinessTools
 
+logger = logging.getLogger(__name__)
+
 # The assistant app expects a sibling "BusinessOs" app with a Business model
 # exposing can_record_sales(user) -- adjust this import if your project
 # names that app something else.
 from BusinessOs.models import Business
 
-# gemini-2.5-flash: fast, cheap, and the most battle-tested model line for
-# automatic/manual function calling as of writing. gemini-2.5-pro is a
-# drop-in upgrade if you need deeper reasoning on messier questions. Avoid
-# pointing this at the 3.5-flash preview line for now -- there's an open,
-# reported bug where it can return an empty final answer after a tool
-# call completes; not worth the risk for a finance-facing assistant.
-MODEL_NAME = "gemini-2.5-flash"
+# gemini-3.6-flash: fast, structured tool-calling support for real-time finance questions.
+MODEL_NAME = "gemini-3.6-flash"
 
 MAX_TOOL_ROUNDS = 4
 MAX_HISTORY_TURNS = 12
@@ -71,7 +69,7 @@ MAX_HISTORY_TURNS = 12
 # number WITHOUT having called any tool this turn, that's a guess
 # slipping through despite the system prompt -- force a redo.
 FINANCE_KEYWORDS = (
-    "profit", "revenue", "sale", "sold", "stock", "restock", "owe", "debt",
+    "profit", "revenue", "sale", "sold", "stock", "restock", "owe", "debt","loss"
     "expense", "performance", "money", "faida", "hisa", "deni", "mauzo", "bei",
 )
 NUMBER_PATTERN = re.compile(r"\d{2,}")
@@ -285,9 +283,7 @@ def ask(request, business_id):
     try:
         reply_text, tools_used = run_conversation(business, history, message)
     except Exception:
-        # A Gemini/network hiccup should never surface as a raw 500 to a
-        # shop owner mid-shift. Wire up real logging here (logger.exception)
-        # -- swallowing the error is fine for the USER, not for you.
+        logger.exception("AI Assistant execution failed for business_id=%s", business_id)
         return JsonResponse({
             "reply": "Samahani, I couldn't reach the assistant service just now. Please try again in a moment.",
             "tools_used": [], "error": True,

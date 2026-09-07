@@ -4,36 +4,53 @@
 {% block crumb %}Delete Business{% endblock %}
 
 {% block content %}
-<div class="card" style="max-width: 500px; margin: 3rem auto; padding: 2.25rem; border: 1.5px solid var(--color-debt);">
-  <div style="margin-bottom: 1.25rem;">
-    <a href="{% url 'business_settings' business.id %}" class="back-link" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.88rem; font-weight:600; color:var(--color-text-muted); text-decoration:none; margin-bottom:0.75rem;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+<div style="max-width: 520px; margin: 3rem auto; padding: 0 1rem;">
+
+  <!-- Back link -->
+  <div style="margin-bottom: 1rem;">
+    <a href="{% url 'business_settings' business.id %}" class="back-link" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.88rem; font-weight:600; color:var(--color-text-muted); text-decoration:none;">
+      <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
       Cancel &amp; Back to Settings
     </a>
-    <div class="brand-icon" style="width:48px; height:48px; font-size:1.4rem; margin:0 0 0.85rem; background:rgba(239, 68, 68, 0.12); color:var(--color-debt);">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-    </div>
-    <h1 style="font-size:1.55rem; color:var(--color-debt); margin:0 0 0.4rem;">Delete "{{ business.name }}"?</h1>
-    <p style="color:var(--color-text-muted); font-size:0.9rem; line-height:1.5; margin:0;">
-      This action is <strong>permanent and irreversible</strong>. All inventory catalog items, recorded sales, customer debts, supplier records, and financial balance sheets for this store will be wiped out immediately.
-    </p>
   </div>
 
-  <div style="background:var(--color-surface-subtle); border-left:4px solid var(--color-debt); padding:0.85rem 1rem; border-radius:var(--radius-sm); font-size:0.86rem; margin-bottom:1.5rem;">
-    Please make sure you have backed up or settled all pending customer debts and supplier invoices before confirming deletion.
+  <div class="card" style="padding: 2.25rem; border: 1.5px solid var(--color-danger-border);">
+    <!-- Warning icon & header -->
+    <div style="text-align:center; margin-bottom:1.5rem;">
+      <div style="width:64px; height:64px; border-radius:50%; background:var(--color-danger-bg); color:var(--color-danger); display:inline-flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+        <i data-lucide="alert-triangle" style="width:30px;height:30px;"></i>
+      </div>
+      <h1 style="font-size:1.55rem; font-weight:800; color:var(--color-danger); margin:0 0 0.5rem; letter-spacing:-0.02em;">
+        Delete "{{ business.name }}"?
+      </h1>
+      <p style="color:var(--color-text-muted); font-size:0.9rem; line-height:1.55; margin:0;">
+        This action is <strong>permanent and irreversible</strong>. All inventory items, sales records,
+        customer debts, supplier records, and financial data for this business will be erased immediately.
+      </p>
+    </div>
+
+    <!-- Warning notice -->
+    <div style="background:var(--color-warning-bg); border:1px solid var(--color-warning-border); border-radius:var(--radius-sm); padding:0.9rem 1rem; margin-bottom:1.75rem; display:flex; align-items:flex-start; gap:0.6rem;">
+      <i data-lucide="info" style="width:16px;height:16px; color:var(--color-warning); flex-shrink:0; margin-top:2px;"></i>
+      <p style="font-size:0.85rem; color:var(--color-warning-text); margin:0; line-height:1.5;">
+        Please ensure all pending customer debts and supplier invoices are settled before confirming deletion.
+      </p>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <button type="submit" class="btn btn-danger" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;">
+          <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+          Yes, Delete Permanently
+        </button>
+        <a href="{% url 'business_settings' business.id %}" class="btn btn-secondary" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:0.4rem;">
+          <i data-lucide="x" style="width:15px;height:15px;"></i>
+          Cancel
+        </a>
+      </div>
+    </form>
   </div>
 
-  <form method="post">
-    {% csrf_token %}
-    <div style="display:flex; gap:0.75rem;">
-      <button type="submit" class="btn btn-danger" style="flex:1;">
-        Yes, Permanently Delete Business
-      </button>
-      <a href="{% url 'business_settings' business.id %}" class="btn btn-secondary">
-        Cancel
-      </a>
-    </div>
-  </form>
 </div>
 {% endblock %}
-

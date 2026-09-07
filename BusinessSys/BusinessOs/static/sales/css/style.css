@@ -1019,13 +1019,16 @@ textarea:focus {
   color: var(--color-warning-text);
 }
 .alert-dismiss {
-  background: none;
+  flex-shrink: 0;
+  background: transparent;
   border: none;
   cursor: pointer;
   color: inherit;
   opacity: 0.7;
-  padding: 0;
+  padding: 2px;
   display: flex;
+  align-items: center;
+  transition: opacity 0.15s ease;
 }
 .alert-dismiss:hover { opacity: 1; }
 
@@ -1287,3 +1290,328 @@ textarea:focus {
     flex: 1;
   }
 }
+
+/* ==========================================================================
+   NEW v3.0 — Warm Palette, Motion Polish, Alpine.js Modal, Lucide Support
+   ========================================================================== */
+
+/* Extended warm color tokens */
+:root {
+  --color-amber: #d97706;
+  --color-amber-light: #fef3c7;
+  --color-teal: #0d9488;
+  --color-teal-light: #ccfbf1;
+  --color-sand: #faf7f2;
+  --color-card-warm: #fffcf5;
+  --color-profit: #10b981;
+  --color-debt: #ef4444;
+  --radius-md: 12px;
+}
+
+/* Dark theme warm palette overrides */
+[data-theme="dark"] {
+  --color-sand: #1a1a2e;
+  --color-card-warm: #1e293b;
+}
+
+/* ── Lucide Icon Sizing in Nav ─────────────────────────────────── */
+.nav-item a i,
+.nav-item a svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.mobile-nav-item i,
+.mobile-nav-item svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ── Topbar User Group ─────────────────────────────────────────── */
+.topbar-user-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--color-text);
+  display: none;
+}
+@media (min-width: 768px) {
+  .user-name { display: inline; }
+}
+
+/* ── Language Switcher ─────────────────────────────────────────── */
+.lang-switcher {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+.lang-btn {
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  transition: all 0.15s ease;
+  letter-spacing: 0.03em;
+}
+.lang-btn:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+.lang-btn--active {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+.lang-btn--active:hover {
+  color: #ffffff;
+  background: var(--color-primary-hover);
+}
+
+/* ── Ghost / Icon-only Button ──────────────────────────────────── */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: transparent;
+}
+.btn-ghost:hover {
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Theme Icons toggle ────────────────────────────────────────── */
+[data-theme="dark"] .theme-icon-light { display: none !important; }
+[data-theme="dark"] .theme-icon-dark  { display: inline-flex !important; }
+[data-theme="light"] .theme-icon-light { display: inline-flex !important; }
+[data-theme="light"] .theme-icon-dark  { display: none !important; }
+
+/* ── Animated Confirmation Modal (Alpine.js) ───────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1.5rem;
+}
+
+.modal-dialog {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  max-width: 460px;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+.modal-icon--danger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+.modal-icon--warning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+.modal-icon--success {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.5rem;
+}
+.modal-message {
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1.5rem;
+  line-height: 1.55;
+}
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* ── Global Suggestion Chips ───────────────────────────────────── */
+.suggestion-chip {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.suggestion-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(15, 81, 50, 0.12);
+}
+
+/* ── Sidebar Scroll ────────────────────────────────────────────── */
+.sidebar-scroll {
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+/* ── Micro-interaction hover lifts on cards ────────────────────── */
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+.kpi-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+
+/* ── Warm card surface variant ─────────────────────────────────── */
+.card-warm {
+  background: var(--color-card-warm);
+}
+
+/* ── Alpine.js utility (hide/show) ────────────────────────────── */
+[x-cloak] { display: none !important; }
+
+/* ── Transition helpers for Alpine ────────────────────────────── */
+.transition { transition-property: color, background-color, border-color, opacity, transform, box-shadow; }
+.ease-out { transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+.ease-in { transition-timing-function: cubic-bezier(0.4, 0, 1, 1); }
+.duration-150 { transition-duration: 150ms; }
+.duration-200 { transition-duration: 200ms; }
+.opacity-0 { opacity: 0; }
+.opacity-100 { opacity: 1; }
+.scale-95 { transform: scale(0.95); }
+.scale-100 { transform: scale(1); }
+.-translate-y-2 { transform: translateY(-0.5rem); }
+.translate-y-0 { transform: translateY(0); }
+
+/* ── Dropdown Animation ────────────────────────────────────────── */
+.dropdown-menu {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  min-width: 180px;
+  padding: 0.35rem 0;
+  z-index: 60;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.88rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background 0.12s ease;
+  text-decoration: none;
+}
+.dropdown-item:hover {
+  background: var(--color-surface-subtle);
+  color: var(--color-primary);
+}
+
+/* ── Slide-over Panel ──────────────────────────────────────────── */
+.slide-over-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 80;
+  backdrop-filter: blur(2px);
+}
+.slide-over-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(480px, 95vw);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+  z-index: 81;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.slide-over-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.slide-over-body {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+/* ── Skeleton Loading Enhanced ─────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    to right,
+    var(--color-border) 8%,
+    var(--color-surface-subtle) 18%,
+    var(--color-border) 33%
+  );
+  background-size: 800px 104px;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--radius-xs);
+}
+.skeleton-text { height: 14px; width: 100%; margin-bottom: 8px; }
+.skeleton-title { height: 22px; width: 65%; margin-bottom: 12px; }
+.skeleton-box { height: 80px; width: 100%; margin-bottom: 12px; }
+.skeleton-circle { border-radius: 50%; }
+

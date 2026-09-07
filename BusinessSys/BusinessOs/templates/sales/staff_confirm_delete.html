@@ -4,10 +4,9 @@
 {% block crumb %}Remove Staff{% endblock %}
 
 {% block content %}
-<div class="card" style="max-width: 480px; margin: 2rem auto; text-align:center;">
 <div style="max-width: 480px; margin: 0 auto 0.75rem auto;">
-  <a href="{% url 'staff_list' business.id %}" class="back-link">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+  <a href="{% url 'staff_list' business.id %}" class="back-link" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.88rem; font-weight:600; color:var(--color-text-muted); text-decoration:none;">
+    <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
     Back to Staff List
   </a>
 </div>

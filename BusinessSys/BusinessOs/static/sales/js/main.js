@@ -1,10 +1,10 @@
 /**
- * Biashara OS — Global UI Interactions
- * Mobile drawer navigation, instant search filters, alert dismissals, print triggers.
+ * Biashara OS — Global UI Interactions v3.0
+ * Mobile drawer, search filters, alert dismissals, theme persistence, password toggles.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Mobile Sidebar Navigation Drawer
+  // ── 1. Mobile Sidebar Navigation Drawer ─────────────────────────
   const menuToggle = document.querySelector(".menu-toggle-btn");
   const sidebar = document.querySelector(".app-sidebar");
   const backdrop = document.querySelector(".sidebar-backdrop");
@@ -35,29 +35,44 @@ document.addEventListener("DOMContentLoaded", () => {
     backdrop.addEventListener("click", closeDrawer);
   }
 
-  // 2. Alert Dismissal
+  // Close drawer on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeDrawer();
+    }
+  });
+
+  // Auto-close drawer when clicking any link inside sidebar
+  if (sidebar) {
+    sidebar.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeDrawer);
+    });
+  }
+
+  // ── 2. Alert Dismissal ───────────────────────────────────────────
   document.querySelectorAll(".alert-dismiss").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const alert = e.target.closest(".alert, .message");
       if (alert) {
+        alert.style.transition = "opacity 0.2s ease, transform 0.2s ease";
         alert.style.opacity = "0";
         alert.style.transform = "translateY(-8px)";
-        setTimeout(() => alert.remove(), 200);
+        setTimeout(() => alert.remove(), 220);
       }
     });
   });
 
-  // Auto-dismiss success messages after 5 seconds
+  // Auto-dismiss success and info alerts after 5 seconds
   setTimeout(() => {
-    document.querySelectorAll(".alert-success, .message-success").forEach((alert) => {
-      alert.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+    document.querySelectorAll(".alert-success, .alert-info").forEach((alert) => {
+      alert.style.transition = "opacity 0.4s ease, transform 0.4s ease";
       alert.style.opacity = "0";
       alert.style.transform = "translateY(-8px)";
-      setTimeout(() => alert.remove(), 300);
+      setTimeout(() => alert.remove(), 400);
     });
   }, 5000);
 
-  // 3. Global Instant Search Filter (Data Tables & Card Lists)
+  // ── 3. Global Instant Search Filter ─────────────────────────────
   const searchInputs = document.querySelectorAll(".search-input");
   searchInputs.forEach((input) => {
     input.addEventListener("input", (e) => {
@@ -67,66 +82,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
       items.forEach((item) => {
         const text = item.textContent.toLowerCase();
-        if (!term || text.includes(term)) {
-          item.style.display = "";
-        } else {
-          item.style.display = "none";
-        }
+        item.style.display = !term || text.includes(term) ? "" : "none";
       });
     });
   });
 
-  // 4. Print Action Trigger
+  // ── 4. Print Action ──────────────────────────────────────────────
   document.querySelectorAll('[data-action="print"]').forEach((btn) => {
-    btn.addEventListener("click", () => {
-      window.print();
-    });
+    btn.addEventListener("click", () => window.print());
   });
 
-  // 5. Password Visibility Toggle
+  // ── 5. Password Visibility Toggle ───────────────────────────────
   document.querySelectorAll(".password-toggle").forEach((toggle) => {
-    toggle.addEventListener("click", (e) => {
+    toggle.addEventListener("click", () => {
       const targetId = toggle.dataset.target;
       const input = document.getElementById(targetId);
       if (input) {
-        if (input.type === "password") {
-          input.type = "text";
-          toggle.textContent = "Hide";
-        } else {
-          input.type = "password";
-          toggle.textContent = "Show";
-        }
+        const isHidden = input.type === "password";
+        input.type = isHidden ? "text" : "password";
+        toggle.textContent = isHidden ? "Hide" : "Show";
       }
     });
   });
 
-  // 6. Dark / Light Theme Controller
-  const storedTheme = localStorage.getItem("biashara_theme");
-  const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const initialTheme = storedTheme || (systemPrefersDark ? "dark" : "light");
-  document.documentElement.setAttribute("data-theme", initialTheme);
-
-  function updateThemeUI(theme) {
-    document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
-      const label = btn.querySelector(".theme-toggle-label");
-      if (label) {
-        label.textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
-      }
+  // ── 6. Dark / Light Theme Persistence & Sync ────────────────────
+  function syncThemeUI() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    document.querySelectorAll(".theme-icon-light").forEach((el) => {
+      el.style.display = isDark ? "none" : "";
+    });
+    document.querySelectorAll(".theme-icon-dark").forEach((el) => {
+      el.style.display = isDark ? "" : "none";
+    });
+    document.querySelectorAll(".theme-toggle-label").forEach((el) => {
+      el.textContent = isDark ? "Light Mode" : "Dark Mode";
     });
   }
-  updateThemeUI(initialTheme);
 
-  document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme") || "light";
-      const nextTheme = current === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", nextTheme);
-      localStorage.setItem("biashara_theme", nextTheme);
-      updateThemeUI(nextTheme);
-    });
-  });
+  syncThemeUI();
 
-  // 7. Modal Dialogs & Backdrops
+  // ── 7. Lucide Icons Initializer ─────────────────────────────────
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+
+  // ── 8. Modal Dialogs & Backdrops (non-Alpine fallback) ──────────
   document.querySelectorAll("[data-modal-target]").forEach((trigger) => {
     trigger.addEventListener("click", () => {
       const targetId = trigger.getAttribute("data-modal-target");
@@ -135,10 +135,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
-    backdrop.addEventListener("click", (e) => {
-      if (e.target === backdrop || e.target.classList.contains("modal-close")) {
-        backdrop.classList.remove("active");
+  document.querySelectorAll(".modal-backdrop").forEach((modalBackdrop) => {
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop || e.target.classList.contains("modal-close")) {
+        modalBackdrop.classList.remove("active");
       }
     });
   });
@@ -150,4 +150,30 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// ── 9. Skeleton Loading Helpers (global) ─────────────────────────
+window.showSkeleton = function(container, count = 3) {
+  if (!container) return;
+  container.innerHTML = Array(count).fill(0).map(() => `
+    <div style="padding: 0.75rem 0; border-bottom: 1px solid var(--color-border);">
+      <div class="skeleton skeleton-title" style="margin-bottom: 8px;"></div>
+      <div class="skeleton skeleton-text" style="width: 55%;"></div>
+    </div>
+  `).join("");
+};
 
+window.hideSkeleton = function(container) {
+  if (container) container.innerHTML = "";
+};
+
+// ── 10. Global theme toggle ─────────────────────────────────────
+if (typeof window.toggleTheme === "undefined") {
+  window.toggleTheme = function() {
+    const current = document.documentElement.getAttribute("data-theme") || "light";
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("biashara-theme", next);
+    if (typeof updateThemeIcons === "function") {
+      updateThemeIcons();
+    }
+  };
+}

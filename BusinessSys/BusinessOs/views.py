@@ -118,7 +118,6 @@ def register(request):
         if form.is_valid():
             data = form.cleaned_data
             with transaction.atomic():
-                user = User.objects.create_user(username=data["phone"], password=data["password"])
                 user = User.objects.create_user(
                     username=data["username"],
                     email=data["email"],
@@ -134,8 +133,6 @@ def register(request):
                     location=data.get("business_location", ""),
                     phone=data["phone"],
                 )
-            auth_login(request, user)
-            return redirect("business_detail", business_id=business.id)
             auth_login(request, user, backend="BusinessOs.backends.PhoneOrUsernameBackend")
             return redirect("business_dashboard", business_id=business.id)
     else:

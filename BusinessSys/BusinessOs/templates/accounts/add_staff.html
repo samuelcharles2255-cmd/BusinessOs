@@ -7,7 +7,7 @@
 <div class="card" style="max-width: 520px; margin: 1.5rem auto;">
   <div style="margin-bottom: 1rem;">
     <a href="{% url 'staff_list' business.id %}" class="back-link" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.88rem; font-weight:600; color:var(--color-text-muted); text-decoration:none;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
       Back to Staff Roster
     </a>
   </div>
@@ -50,7 +50,6 @@
     <div class="form-group {% if form.phone.errors %}has-error{% endif %}">
       <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
       {{ form.phone }}
-      <div class="form-help">This will be their username to sign in to the counter.</div>
       <div class="form-help">Their contact mobile number (can also be used to log in).</div>
       {% for error in form.phone.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
     </div>
