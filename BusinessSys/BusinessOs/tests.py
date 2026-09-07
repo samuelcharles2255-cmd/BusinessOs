@@ -224,3 +224,68 @@ class ViewIntegrationTests(TestCase):
             "product_id": [str(self.product.id)], "quantity": ["1"], "amount_received": "2800",
         })
         self.assertEqual(resp.status_code, 403)
+
+
+class PasswordResetDirectTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="shopkeeper",
+            email="shopkeeper@example.com",
+            password="oldpassword123",
+        )
+
+    def test_get_password_reset_page(self):
+        resp = self.client.get("/password-reset/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Reset Your Password")
+
+    def test_direct_password_reset_redirects_to_confirm_in_browser(self):
+        # Submitting username or email directly redirects to the browser password confirm URL
+        resp = self.client.post("/password-reset/", {"identifier": "shopkeeper"})
+        self.assertEqual(resp.status_code, 302)
+        redirect_url = resp["Location"]
+        self.assertIn("/reset/", redirect_url)
+
+        # Follow redirect in browser
+        confirm_resp = self.client.get(redirect_url, follow=True)
+        self.assertEqual(confirm_resp.status_code, 200)
+        self.assertContains(confirm_resp, "Set New Password")
+
+    def test_direct_password_reset_by_email(self):
+        resp = self.client.post("/password-reset/", {"identifier": "shopkeeper@example.com"})
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn("/reset/", resp["Location"])
+
+    def test_direct_password_reset_invalid_identifier(self):
+        resp = self.client.post("/password-reset/", {"identifier": "nonexistent_person"})
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "No active account found")
+
+    def test_password_reset_done_has_no_developer_console_warning(self):
+        resp = self.client.get("/password-reset/done/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertNotContains(resp, "Developer Mode — Console Email")
+        self.assertNotContains(resp, "terminal/console")
+
+
+class LanguageSwitcherTests(TestCase):
+    def test_switch_language_to_swahili(self):
+        resp = self.client.get("/set-language/?lang=sw")
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(self.client.session.get("biashara_lang"), "sw")
+        self.assertEqual(resp.cookies["biashara_lang"].value, "sw")
+
+    def test_switch_language_to_english(self):
+        resp = self.client.get("/set-language/?lang=en")
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(self.client.session.get("biashara_lang"), "en")
+        self.assertEqual(resp.cookies["biashara_lang"].value, "en")
+
+    def test_swahili_content_rendered(self):
+        # Set cookie to sw
+        self.client.cookies["biashara_lang"] = "sw"
+        resp = self.client.get("/password-reset/")
+        self.assertEqual(resp.status_code, 200)
+        # Verify Swahili language attribute is present in rendered HTML
+        self.assertContains(resp, 'lang="sw"')
+        self.assertContains(resp, "Biashara OS")

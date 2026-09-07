@@ -67,15 +67,7 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(next_page="login"), name="logout"),
 
     # --- Password Reset ---------------------------------------------------
-    path(
-        "password-reset/",
-        auth_views.PasswordResetView.as_view(
-            template_name="accounts/password_reset_form.html",
-            email_template_name="accounts/password_reset_email.html",
-            subject_template_name="accounts/password_reset_subject.txt",
-        ),
-        name="password_reset",
-    ),
+    path("password-reset/", views.direct_password_reset, name="password_reset"),
     path(
         "password-reset/done/",
         auth_views.PasswordResetDoneView.as_view(

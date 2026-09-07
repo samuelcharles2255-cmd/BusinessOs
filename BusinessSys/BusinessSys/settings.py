@@ -43,16 +43,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'BusinessOs',
     'ai',
+    "debug_toolbar"
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'BusinessSys.urls'
@@ -67,12 +70,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
+                'BusinessOs.context_processors.biashara_i18n',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'BusinessSys.wsgi.application'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 
 # Database
@@ -108,7 +117,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('sw', 'Kiswahili'),
+]
+
+LANGUAGE_COOKIE_NAME = 'biashara_lang'
 
 TIME_ZONE = 'UTC'
 
@@ -120,11 +136,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
-STATIC_URL = 'static/'
 STATIC_URL = '/static/'
 
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

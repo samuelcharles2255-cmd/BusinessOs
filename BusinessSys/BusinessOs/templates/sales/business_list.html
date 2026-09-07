@@ -17,7 +17,7 @@
 </div>
 
 {% if businesses %}
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 1rem;">
   {% for biz in businesses %}
   <div class="card card-hover" style="display:flex; flex-direction:column; justify-content:space-between; margin-bottom:0;">
     <div>

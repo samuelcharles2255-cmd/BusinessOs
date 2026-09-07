@@ -1,10 +1,10 @@
 {% load static %}<!DOCTYPE html>
-<html lang="en" x-data="{ sidebarOpen: false }" :class="{ 'sidebar-mobile-open': sidebarOpen }">
+<html lang="{{ current_lang|default:'en' }}" x-data="{ sidebarOpen: false }" :class="{ 'sidebar-mobile-open': sidebarOpen }">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{% block title %}Biashara OS{% endblock %} — POS &amp; Business Management</title>
-  <link rel="stylesheet" href="{% static 'sales/css/style.css' %}?v=3.0">
+  <link rel="stylesheet" href="{% static 'sales/css/style.css' %}?v=3.1">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <!-- Alpine.js -->
@@ -51,7 +51,7 @@
     <p class="modal-message" x-text="message"></p>
     <div class="modal-actions">
       <button type="button" class="btn btn-secondary" @click="cancel()">
-        Cancel
+        {% if is_swahili %}Ghairi{% else %}Cancel{% endif %}
       </button>
       <button type="button" class="btn" :class="confirmClass" @click="confirm()">
         <span x-text="confirmLabel"></span>
@@ -76,12 +76,12 @@
           <div class="brand-icon">
             <i data-lucide="shopping-bag" style="width:18px;height:18px;"></i>
           </div>
-          <span>Biashara OS</span>
+          <span class="brand-title">Biashara OS</span>
         </a>
 
         {% if business %}
-        <a href="{% url 'business_detail' business.id %}" class="business-tag" title="View business details">
-          <i data-lucide="store" style="width:14px;height:14px;"></i>
+        <a href="{% url 'business_detail' business.id %}" class="business-tag" title="{{ business.name }}">
+          <i data-lucide="store" style="width:14px;height:14px;flex-shrink:0;"></i>
           <span>{{ business.name }}</span>
         </a>
         {% endif %}
@@ -89,9 +89,9 @@
 
       <div class="topbar-right">
         {% if business %}
-        <a href="{% url 'record_sale' business.id %}" class="btn btn-primary btn-sm" style="display:inline-flex;align-items:center;gap:0.4rem;">
+        <a href="{% url 'record_sale' business.id %}" class="btn btn-primary btn-sm desktop-only-btn" style="display:inline-flex;align-items:center;gap:0.4rem;">
           <i data-lucide="plus" style="width:16px;height:16px;"></i>
-          <span>New Sale</span>
+          <span>{% if is_swahili %}Mauzo Mapya{% else %}New Sale{% endif %}</span>
         </a>
         {% endif %}
 
@@ -100,10 +100,10 @@
           <!-- Language Switcher -->
           <div class="lang-switcher">
             <a href="{% url 'set_language' %}?lang=en"
-               class="lang-btn {% if request.session.biashara_lang != 'sw' %}lang-btn--active{% endif %}"
+               class="lang-btn {% if current_lang != 'sw' %}lang-btn--active{% endif %}"
                title="English">EN</a>
             <a href="{% url 'set_language' %}?lang=sw"
-               class="lang-btn {% if request.session.biashara_lang == 'sw' %}lang-btn--active{% endif %}"
+               class="lang-btn {% if current_lang == 'sw' %}lang-btn--active{% endif %}"
                title="Kiswahili">SW</a>
           </div>
 
@@ -123,15 +123,31 @@
           <!-- Sign Out -->
           <form method="post" action="{% url 'logout' %}" style="margin:0;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-ghost btn-sm" title="Sign out">
+            <button type="submit" class="btn btn-ghost btn-sm icon-btn" title="{% if is_swahili %}Toka{% else %}Sign out{% endif %}">
               <i data-lucide="log-out" style="width:15px;height:15px;"></i>
             </button>
           </form>
         </div>
         {% else %}
-        <div style="display:inline-flex;align-items:center;gap:0.5rem;">
-          <a href="{% url 'login' %}" class="btn btn-ghost btn-sm">Sign in</a>
-          <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Register</a>
+        <div style="display:inline-flex;align-items:center;gap:0.4rem;">
+          <!-- Language Switcher (Unauthenticated) -->
+          <div class="lang-switcher">
+            <a href="{% url 'set_language' %}?lang=en"
+               class="lang-btn {% if current_lang != 'sw' %}lang-btn--active{% endif %}"
+               title="English">EN</a>
+            <a href="{% url 'set_language' %}?lang=sw"
+               class="lang-btn {% if current_lang == 'sw' %}lang-btn--active{% endif %}"
+               title="Kiswahili">SW</a>
+          </div>
+
+          <button type="button" class="theme-toggle-btn icon-btn" title="Toggle dark / light mode"
+                  onclick="toggleTheme()">
+            <i data-lucide="sun" class="theme-icon-light" style="width:16px;height:16px;"></i>
+            <i data-lucide="moon" class="theme-icon-dark" style="width:16px;height:16px;display:none;"></i>
+          </button>
+
+          <a href="{% url 'login' %}" class="btn btn-ghost btn-sm">{% if is_swahili %}Ingia{% else %}Sign in{% endif %}</a>
+          <a href="{% url 'register' %}" class="btn btn-primary btn-sm">{% if is_swahili %}Jisajili{% else %}Register{% endif %}</a>
         </div>
         {% endif %}
       </div>
@@ -148,119 +164,132 @@
     <!-- ═══ COLLAPSIBLE SIDEBAR ═══ -->
     <aside class="app-sidebar" :class="{ 'drawer-open': sidebarOpen }">
 
+      <!-- Mobile Drawer Close Header -->
+      <div class="sidebar-drawer-header">
+        <div class="brand-badge">
+          <div class="brand-icon">
+            <i data-lucide="shopping-bag" style="width:18px;height:18px;"></i>
+          </div>
+          <span>Biashara OS</span>
+        </div>
+        <button type="button" class="sidebar-close-btn" @click="sidebarOpen = false" aria-label="Close navigation">
+          <i data-lucide="x" style="width:20px;height:20px;"></i>
+        </button>
+      </div>
+
       <div class="sidebar-scroll">
         <!-- Overview -->
-        <div class="nav-section-title">Overview</div>
+        <div class="nav-section-title">{% if is_swahili %}Muhtasari{% else %}Overview{% endif %}</div>
         <ul class="sidebar-nav">
           <li class="nav-item {% if request.resolver_match.url_name == 'business_dashboard' %}active{% endif %}">
             <a href="{% url 'business_dashboard' business.id %}">
               <i data-lucide="layout-dashboard"></i>
-              Dashboard
+              {% if is_swahili %}Dashibodi{% else %}Dashboard{% endif %}
             </a>
           </li>
           <li class="nav-item {% if 'assistant' in request.path %}active{% endif %}">
             <a href="{% url 'assistant:chat_page' business.id %}">
               <i data-lucide="bot"></i>
-              AI Assistant
+              {% if is_swahili %}Msaidizi wa AI{% else %}AI Assistant{% endif %}
             </a>
           </li>
           <li class="nav-item {% if request.resolver_match.url_name == 'business_detail' or request.resolver_match.url_name == 'business_update' %}active{% endif %}">
             <a href="{% url 'business_detail' business.id %}">
               <i data-lucide="building-2"></i>
-              Business Hub
+              {% if is_swahili %}Kituo cha Biashara{% else %}Business Hub{% endif %}
             </a>
           </li>
         </ul>
 
         <!-- Sales & Orders -->
-        <div class="nav-section-title">Sales &amp; Orders</div>
+        <div class="nav-section-title">{% if is_swahili %}Mauzo na Maagizo{% else %}Sales &amp; Orders{% endif %}</div>
         <ul class="sidebar-nav">
           <li class="nav-item {% if request.resolver_match.url_name == 'record_sale' %}active{% endif %}">
             <a href="{% url 'record_sale' business.id %}">
               <i data-lucide="shopping-cart"></i>
-              Record Sale
+              {% if is_swahili %}Rekodi Mauzo{% else %}Record Sale{% endif %}
             </a>
           </li>
           <li class="nav-item {% if request.resolver_match.url_name == 'sale_list' or request.resolver_match.url_name == 'sale_detail' %}active{% endif %}">
             <a href="{% url 'sale_list' business.id %}">
               <i data-lucide="file-text"></i>
-              Sales History
+              {% if is_swahili %}Historia ya Mauzo{% else %}Sales History{% endif %}
             </a>
           </li>
         </ul>
 
         <!-- Inventory & Stock -->
-        <div class="nav-section-title">Inventory &amp; Stock</div>
+        <div class="nav-section-title">{% if is_swahili %}Bidhaa na Stoo{% else %}Inventory &amp; Stock{% endif %}</div>
         <ul class="sidebar-nav">
           <li class="nav-item {% if request.resolver_match.url_name == 'product_list' or request.resolver_match.url_name == 'product_create' or request.resolver_match.url_name == 'product_update' or request.resolver_match.url_name == 'restock_product' %}active{% endif %}">
             <a href="{% url 'product_list' business.id %}">
               <i data-lucide="package"></i>
-              Products
+              {% if is_swahili %}Bidhaa{% else %}Products{% endif %}
             </a>
           </li>
           <li class="nav-item {% if request.resolver_match.url_name == 'purchase_list' or request.resolver_match.url_name == 'record_purchase' or request.resolver_match.url_name == 'purchase_detail' %}active{% endif %}">
             <a href="{% url 'purchase_list' business.id %}">
               <i data-lucide="truck"></i>
-              Purchases (Inbound)
+              {% if is_swahili %}Ununuzi wa Bidhaa{% else %}Purchases (Inbound){% endif %}
             </a>
           </li>
           <li class="nav-item {% if request.resolver_match.url_name == 'brand_list' or request.resolver_match.url_name == 'brand_create' %}active{% endif %}">
             <a href="{% url 'brand_list' business.id %}">
               <i data-lucide="tag"></i>
-              Brands
+              {% if is_swahili %}Chapa{% else %}Brands{% endif %}
             </a>
           </li>
           <li class="nav-item {% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category_create' %}active{% endif %}">
             <a href="{% url 'category_list' business.id %}">
               <i data-lucide="list"></i>
-              Categories
+              {% if is_swahili %}Makundi{% else %}Categories{% endif %}
             </a>
           </li>
         </ul>
 
         <!-- People & Debt -->
-        <div class="nav-section-title">People &amp; Debt</div>
+        <div class="nav-section-title">{% if is_swahili %}Watu na Madeni{% else %}People &amp; Debt{% endif %}</div>
         <ul class="sidebar-nav">
           <li class="nav-item {% if request.resolver_match.url_name == 'customer_list' or request.resolver_match.url_name == 'customer_create' or request.resolver_match.url_name == 'customer_update' %}active{% endif %}">
             <a href="{% url 'customer_list' business.id %}">
               <i data-lucide="users"></i>
-              Customers
+              {% if is_swahili %}Wateja{% else %}Customers{% endif %}
             </a>
           </li>
           <li class="nav-item {% if request.resolver_match.url_name == 'supplier_list' or request.resolver_match.url_name == 'supplier_create' or request.resolver_match.url_name == 'supplier_update' %}active{% endif %}">
             <a href="{% url 'supplier_list' business.id %}">
               <i data-lucide="truck"></i>
-              Suppliers
+              {% if is_swahili %}Wasambazaji{% else %}Suppliers{% endif %}
             </a>
           </li>
           {% if business.owner_id == request.user.id %}
           <li class="nav-item {% if request.resolver_match.url_name == 'staff_list' or request.resolver_match.url_name == 'staff_create' %}active{% endif %}">
             <a href="{% url 'staff_list' business.id %}">
               <i data-lucide="user-plus"></i>
-              Staff
+              {% if is_swahili %}Wafanyakazi{% else %}Staff{% endif %}
             </a>
           </li>
           {% endif %}
         </ul>
 
         <!-- Finance -->
-        <div class="nav-section-title">Finance</div>
+        <div class="nav-section-title">{% if is_swahili %}Fedha na Hesabu{% else %}Finance{% endif %}</div>
         <ul class="sidebar-nav">
           <li class="nav-item {% if request.resolver_match.url_name == 'expense_list' or request.resolver_match.url_name == 'expense_create' or request.resolver_match.url_name == 'expense_update' %}active{% endif %}">
             <a href="{% url 'expense_list' business.id %}">
               <i data-lucide="receipt"></i>
-              Expenses
+              {% if is_swahili %}Matumizi{% else %}Expenses{% endif %}
             </a>
           </li>
         </ul>
 
         <!-- Store Management -->
-        <div class="nav-section-title">Store Management</div>
+        <div class="nav-section-title">{% if is_swahili %}Usimamizi wa Duka{% else %}Store Management{% endif %}</div>
         <ul class="sidebar-nav">
           <li class="nav-item {% if request.resolver_match.url_name == 'business_settings' %}active{% endif %}">
             <a href="{% url 'business_settings' business.id %}">
               <i data-lucide="settings"></i>
-              Settings
+              {% if is_swahili %}Mipangilio{% else %}Settings{% endif %}
             </a>
           </li>
         </ul>
@@ -310,31 +339,31 @@
   <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
     <a href="{% url 'business_dashboard' business.id %}"
        class="mobile-nav-item {% if request.resolver_match.url_name == 'business_dashboard' %}active{% endif %}">
-      <i data-lucide="layout-dashboard" style="width:22px;height:22px;"></i>
-      <span>Dashboard</span>
+      <i data-lucide="layout-dashboard" style="width:20px;height:20px;"></i>
+      <span>{% if is_swahili %}Dashibodi{% else %}Dashboard{% endif %}</span>
     </a>
 
     <a href="{% url 'product_list' business.id %}"
        class="mobile-nav-item {% if request.resolver_match.url_name == 'product_list' %}active{% endif %}">
-      <i data-lucide="package" style="width:22px;height:22px;"></i>
-      <span>Stock</span>
+      <i data-lucide="package" style="width:20px;height:20px;"></i>
+      <span>{% if is_swahili %}Stoo{% else %}Stock{% endif %}</span>
     </a>
 
-    <a href="{% url 'record_sale' business.id %}" class="mobile-nav-item highlight">
-      <i data-lucide="plus-circle" style="width:26px;height:26px;"></i>
-      <span>Sale</span>
+    <a href="{% url 'record_sale' business.id %}" class="mobile-nav-item highlight" title="{% if is_swahili %}Rekodi Mauzo{% else %}Record Sale{% endif %}">
+      <i data-lucide="plus-circle" style="width:24px;height:24px;"></i>
+      <span>{% if is_swahili %}Mauzo{% else %}Sale{% endif %}</span>
     </a>
 
     <a href="{% url 'customer_list' business.id %}"
        class="mobile-nav-item {% if request.resolver_match.url_name == 'customer_list' %}active{% endif %}">
-      <i data-lucide="users" style="width:22px;height:22px;"></i>
-      <span>Debtors</span>
+      <i data-lucide="users" style="width:20px;height:20px;"></i>
+      <span>{% if is_swahili %}Madeni{% else %}Debtors{% endif %}</span>
     </a>
 
     <a href="{% url 'assistant:chat_page' business.id %}"
        class="mobile-nav-item {% if 'assistant' in request.path %}active{% endif %}">
-      <i data-lucide="bot" style="width:22px;height:22px;"></i>
-      <span>AI</span>
+      <i data-lucide="bot" style="width:20px;height:20px;"></i>
+      <span>{% if is_swahili %}Msaidizi{% else %}AI{% endif %}</span>
     </a>
   </nav>
   {% endif %}
@@ -402,10 +431,11 @@ function confirmModal() {
 // Global helper — call from anywhere: window.confirmDelete('url_to_go_to', 'Business Name')
 window.confirmDelete = function(actionUrl, entityName) {
   var modal = Alpine.$data(document.getElementById('confirmModal'));
+  var isSw = {{ is_swahili|yesno:"true,false" }};
   modal.show({
-    title: 'Delete ' + (entityName || 'this item') + '?',
-    message: 'This will permanently remove ' + (entityName || 'this') + ' and all associated records. This cannot be undone.',
-    confirmLabel: 'Yes, Delete',
+    title: isSw ? ('Futa ' + (entityName || 'kipengee hiki') + '?') : ('Delete ' + (entityName || 'this item') + '?'),
+    message: isSw ? 'Kitendo hiki kitafuta rekodi hii na taarifa zote zinazohusiana kabisa. Hakiwezi kubatilishwa.' : 'This will permanently remove ' + (entityName || 'this') + ' and all associated records. This cannot be undone.',
+    confirmLabel: isSw ? 'Ndiyo, Futa' : 'Yes, Delete',
     confirmClass: 'btn-danger',
     iconName: 'trash-2',
     iconClass: 'modal-icon--danger',
@@ -420,7 +450,79 @@ window.confirmAction = function(opts) {
 };
 </script>
 
-<script src="{% static 'sales/js/main.js' %}?v=3.0"></script>
+<script src="{% static 'sales/js/main.js' %}?v=3.1"></script>
+
+<!-- Biashara OS Dynamic Client-side i18n Engine -->
+<script id="biashara-i18n-dict" type="application/json">
+{{ translations_sw_json|safe }}
+</script>
+<script>
+(function() {
+  var isSwahili = {{ is_swahili|yesno:"true,false" }};
+  if (!isSwahili) return;
+
+  var raw = document.getElementById('biashara-i18n-dict');
+  if (!raw) return;
+  var dict = {};
+  try { dict = JSON.parse(raw.textContent || '{}'); } catch(e) { return; }
+
+  function translateNode(node) {
+    if (!node) return;
+    if (node.nodeType === 3) { // TEXT_NODE
+      var text = node.nodeValue;
+      var trimmed = text.trim();
+      if (trimmed && dict[trimmed]) {
+        node.nodeValue = text.replace(trimmed, dict[trimmed]);
+      }
+      return;
+    }
+    if (node.nodeType === 1) { // ELEMENT_NODE
+      var tag = node.tagName.toLowerCase();
+      // Skip script, style, code, and pre tags
+      if (tag === 'script' || tag === 'style' || tag === 'code' || tag === 'pre') return;
+      // Do not alter hidden inputs, password values, or form names/actions
+      if (tag === 'input' && (node.type === 'hidden' || node.type === 'password')) return;
+
+      // Translate placeholders
+      if (node.hasAttribute('placeholder')) {
+        var ph = node.getAttribute('placeholder').trim();
+        if (dict[ph]) node.setAttribute('placeholder', dict[ph]);
+      }
+
+      // Translate title attribute
+      if (node.hasAttribute('title')) {
+        var ti = node.getAttribute('title').trim();
+        if (dict[ti]) node.setAttribute('title', dict[ti]);
+      }
+
+      for (var i = 0; i < node.childNodes.length; i++) {
+        translateNode(node.childNodes[i]);
+      }
+    }
+  }
+
+  function runTranslation() {
+    translateNode(document.body);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runTranslation);
+  } else {
+    runTranslation();
+  }
+
+  // Observe dynamically inserted elements (e.g. Alpine modals, POS rows)
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      mutation.addedNodes.forEach(function(addedNode) {
+        translateNode(addedNode);
+      });
+    });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
 
 <script>
 // Initialize Lucide icons after DOM ready

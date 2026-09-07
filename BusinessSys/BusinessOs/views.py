@@ -17,16 +17,21 @@ never be able to grant themselves or someone else more access.
 from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.db.models import F
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import translation
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from .forms import (
@@ -288,10 +293,59 @@ def set_language_preference(request):
     if lang not in ["en", "sw"]:
         lang = "en"
     request.session["biashara_lang"] = lang
+    request.session["_language"] = lang
+    translation.activate(lang)
     referer = request.META.get("HTTP_REFERER") or "/"
     response = redirect(referer)
     response.set_cookie("biashara_lang", lang, max_age=365*24*60*60)
+    cookie_name = getattr(settings, "LANGUAGE_COOKIE_NAME", "biashara_lang")
+    response.set_cookie(cookie_name, lang, max_age=365*24*60*60)
     return response
+
+
+def direct_password_reset(request):
+    """
+    Direct in-browser password reset:
+    User enters their email, username, or phone number.
+    If matching account is found, generates a secure one-time cryptographic token
+    and redirects directly to password_reset_confirm so the user can set their new
+    password immediately in their browser, eliminating the need for terminal console access.
+    """
+    error = None
+    identifier = ""
+    if request.method == "POST":
+        identifier = request.POST.get("identifier", "").strip() or request.POST.get("email", "").strip()
+        if not identifier:
+            error = "Please enter your email, username, or phone number."
+        else:
+            User = get_user_model()
+            user = User.objects.filter(username__iexact=identifier).first()
+            if not user:
+                user = User.objects.filter(email__iexact=identifier).first()
+            if not user:
+                try:
+                    from .utils import normalize_phone
+                    norm_phone = normalize_phone(identifier)
+                    user = User.objects.filter(profile__phone=norm_phone).first()
+                except Exception:
+                    pass
+            if not user:
+                from django.db.models import Q
+                user = User.objects.filter(
+                    Q(profile__phone=identifier) | Q(username=identifier)
+                ).first()
+
+            if user and user.is_active:
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                return redirect("password_reset_confirm", uidb64=uid, token=token)
+            else:
+                error = "No active account found matching that email, username, or phone number. Please check and try again."
+
+    return render(request, "accounts/password_reset_form.html", {
+        "error": error,
+        "identifier": identifier,
+    })
 
 
 
