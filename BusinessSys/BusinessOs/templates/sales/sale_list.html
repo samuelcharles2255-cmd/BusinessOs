@@ -56,7 +56,7 @@
           <span style="color:var(--color-text-light);">Walk-in customer</span>
           {% endif %}
         </td>
-        <td class="table-num" style="font-weight:700;">{{ sale.total_amount|floatformat:2 }}</td>
+        <td class="table-num" style="font-weight:700;">{{ sale.computed_total|floatformat:2 }}</td>
         <td class="table-num" style="color:var(--color-success); font-weight:600;">{{ sale.amount_paid|floatformat:2 }}</td>
         <td class="table-num" style="{% if sale.balance > 0 %}color:var(--color-danger); font-weight:700;{% endif %}">
           {{ sale.balance|floatformat:2 }}

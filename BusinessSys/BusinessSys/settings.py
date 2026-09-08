@@ -4,6 +4,7 @@ Django settings for BusinessSys project.
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -89,8 +90,18 @@ INTERNAL_IPS = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+       "ENGINE": "django.db.backends.mysql",
+        "NAME": os.environ.get("DB_NAME", "pos_db"),
+        "USER": os.environ.get("DB_USER", "pos_user"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "secure_password"),
+        "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
+        "PORT": os.environ.get("DB_PORT", "3306"),
+        "CONN_MAX_AGE": 60,
+        "OPTIONS": {
+            "charset": "utf8mb4",
+            # Enforces STRICT_TRANS_TABLES to prevent silent truncation
+            "init_command": "SET default_storage_engine=INNODB, sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
 

@@ -702,6 +702,15 @@ class ExpenseUpdateView(BusinessAccessMixin, UpdateView):
 # Sale
 # ---------------------------------------------------------------------------
 
+from decimal import Decimal
+from django.db.models import DecimalField, F, Sum
+from django.db.models.functions import Coalesce
+from django.views.generic import ListView
+
+# Assuming BusinessAccessMixin is imported
+# from your_project.mixins import BusinessAccessMixin
+
+
 class SaleListView(BusinessAccessMixin, ListView):
     """This was missing entirely from what you sent -- sale_detail existed
     but there was no page listing sales, so "view orders" from the
@@ -711,7 +720,22 @@ class SaleListView(BusinessAccessMixin, ListView):
     paginate_by = 30
 
     def get_queryset(self):
-        return self.business.sales.select_related("customer")
+        # Adjust "items__quantity" and "items__unit_price"
+        # to match the related_name on your SaleItem model (e.g., items or saleitem_set)
+        return (
+            self.business.sales
+            .select_related("customer")
+            .annotate(
+                computed_total=Coalesce(
+                    Sum(
+                        F("items__quantity") * F("items__unit_price"),
+                        output_field=DecimalField(max_digits=12, decimal_places=2),
+                    ),
+                    Decimal("0.00"),
+                )
+            )
+            .order_by("-created_at")
+        )
 
 
 @login_required
@@ -744,39 +768,70 @@ def record_sale(request, business_id):
     if not product_ids:
         return _err("Add at least one product to the sale.")
 
-    line_items = []
-    for product_id, qty in zip(product_ids, quantities):
-        product = get_object_or_404(Product, pk=product_id, business=business)
+    # 1. Parse and validate raw inputs first (outside the transaction)
+    parsed_items = {}
+    for raw_id, qty in zip(product_ids, quantities):
         try:
+            p_id = int(raw_id)
             quantity = int(qty)
         except (ValueError, TypeError):
-            return _err("Quantity must be a whole number.")
+            return _err("Invalid product ID or quantity format.")
+
         if quantity <= 0:
             return _err("Quantity must be at least 1.")
-        if quantity > product.stock_quantity:
-            return _err(f"Only {product.stock_quantity} units of {product.name} left in stock.")
-        line_items.append((product, quantity))
 
-    total = sum(p.selling_price * q for p, q in line_items)
-    has_balance = amount_received < total
+        # Aggregate quantities if the same product is submitted multiple times
+        parsed_items[p_id] = parsed_items.get(p_id, 0) + quantity
 
     normalized_phone = None
-    if has_balance:
-        if not customer_name or not customer_phone:
-            return _err("This sale has a balance. Enter the customer's name and phone to record the debt.")
-        try:
-            normalized_phone = normalize_phone(customer_phone)
-        except ValidationError as e:
-            return _err(f"Invalid phone number: {e.message}")
 
+    # 2. Database lock, validation, and writes (inside atomic block)
     with transaction.atomic():
+        # Lock products deterministically by sorted ID to prevent deadlocks
+        sorted_ids = sorted(parsed_items.keys())
+        locked_products = list(
+            Product.objects.select_for_update()
+            .filter(pk__in=sorted_ids, business=business)
+            .order_by("pk")
+        )
+
+        if len(locked_products) != len(sorted_ids):
+            return _err("One or more selected products could not be found.")
+
+        # Re-verify stock levels against the locked rows
+        line_items = []
+        for product in locked_products:
+            requested_qty = parsed_items[product.pk]
+            if requested_qty > product.stock_quantity:
+                return _err(f"Only {product.stock_quantity} units of {product.name} left in stock.")
+            line_items.append((product, requested_qty))
+
+        total = sum(p.selling_price * q for p, q in line_items)
+        has_balance = amount_received < total
+
+        if has_balance:
+            if not customer_name or not customer_phone:
+                return _err("This sale has a balance. Enter the customer's name and phone to record the debt.")
+            try:
+                normalized_phone = normalize_phone(customer_phone)
+            except ValidationError as e:
+                return _err(f"Invalid phone number: {e.message}")
+
+        # Record Sale and SaleItems
         sale = Sale.objects.create(business=business, recorded_by=request.user)
 
         for product, quantity in line_items:
             SaleItem.objects.create(
-                sale=sale, product=product, quantity=quantity,
-                unit_price=product.selling_price, unit_cost=product.cost_price,
+                sale=sale,
+                product=product,
+                quantity=quantity,
+                unit_price=product.selling_price,
+                unit_cost=product.cost_price,
             )
+
+            # Deduct the stock and persist
+            product.stock_quantity -= quantity
+            product.save(update_fields=["stock_quantity"])
 
         if has_balance:
             customer, _ = Customer.objects.get_or_create(
@@ -786,7 +841,9 @@ def record_sale(request, business_id):
             sale.save(update_fields=["customer"])
 
         if amount_received > 0:
-            Payment.objects.create(business=business, sale=sale, amount=amount_received, method=payment_method)
+            Payment.objects.create(
+                business=business, sale=sale, amount=amount_received, method=payment_method
+            )
 
     return redirect("sale_detail", sale_id=sale.id)
 

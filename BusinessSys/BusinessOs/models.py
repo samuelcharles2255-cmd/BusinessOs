@@ -482,7 +482,7 @@ class Sale(models.Model):
     recorded_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="sales_recorded"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True,db_index=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -517,6 +517,7 @@ class Sale(models.Model):
     @property
     def estimated_profit(self):
         return sum((item.profit for item in self.items.all()), ZERO)
+    
 
 
 class SaleItem(models.Model):
@@ -587,7 +588,7 @@ class SaleItem(models.Model):
 
 class SaleReturn(models.Model):
     sale = models.ForeignKey(Sale, on_delete=models.CASCADE, related_name="returns")
-    return_date = models.DateField()
+    return_date = models.DateField(db_index=True)
     discount = models.DecimalField(
         max_digits=12, decimal_places=2, default=ZERO, validators=[MinValueValidator(0)],
         help_text="Amount knocked off the refund, if any.",
@@ -678,7 +679,7 @@ class Purchase(models.Model):
         Supplier, on_delete=models.SET_NULL, null=True, blank=True, related_name="purchases"
     )
     invoice_no = models.CharField(max_length=100, blank=True)
-    purchase_date = models.DateField()
+    purchase_date = models.DateField(db_index=True)
     recorded_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="purchases_recorded"
     )
@@ -751,7 +752,7 @@ class Expense(models.Model):
     description = models.CharField(max_length=200)
     category = models.CharField(max_length=50, blank=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    date = models.DateField()
+    date = models.DateField(db_index=True)
 
     class Meta:
         ordering = ["-date"]
