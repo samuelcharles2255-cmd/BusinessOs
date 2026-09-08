@@ -1,0 +1,68 @@
+{% extends "sales/base.html" %}
+
+{% block title %}Brands Catalog — {{ business.name }}{% endblock %}
+{% block crumb %}Brands{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>Brands Catalog</h1>
+    <p>Organize products into manufacturer and distributor brands</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'product_list' business.id %}" class="btn btn-secondary btn-sm">&larr; Products</a>
+    {% if business.owner_id == request.user.id %}
+    <a href="{% url 'brand_create' business.id %}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      New Brand
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+{% if brands %}
+<div class="table-container" style="max-width: 700px;">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Brand Name</th>
+        <th style="text-align:center;">Products Linked</th>
+        <th style="text-align:right;">Filter</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for brand in brands %}
+      <tr>
+        <td>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <span class="brand-icon" style="width:28px; height:28px; font-size:0.85rem;">{{ brand.name|slice:":1"|upper }}</span>
+            <strong>{{ brand.name }}</strong>
+          </div>
+        </td>
+        <td style="text-align:center;">
+          <span class="badge badge-neutral">{{ brand.products.count }} products</span>
+        </td>
+        <td style="text-align:right;">
+          <a href="{% url 'product_list' business.id %}?brand={{ brand.id }}" class="btn btn-secondary btn-sm">
+            View Products &rarr;
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card empty-state">
+  <div class="empty-state-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+  </div>
+  <h3>No brands registered</h3>
+  <p>Create brands to cleanly categorize and group products in your shop.</p>
+  {% if business.owner_id == request.user.id %}
+  <a href="{% url 'brand_create' business.id %}" class="btn btn-primary">+ Add First Brand</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+

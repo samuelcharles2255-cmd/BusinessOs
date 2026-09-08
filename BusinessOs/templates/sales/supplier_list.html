@@ -1,0 +1,170 @@
+{% extends "sales/base.html" %}
+
+{% block title %}{% if request.LANGUAGE_CODE == 'sw' %}Wasambazaji na Madeni{% else %}Suppliers Directory{% endif %} — {{ business.name }}{% endblock %}
+{% block crumb %}{% if request.LANGUAGE_CODE == 'sw' %}Wasambazaji{% else %}Suppliers{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>{% if request.LANGUAGE_CODE == 'sw' %}Wasambazaji na Madeni Yao{% else %}Suppliers &amp; Creditors{% endif %}</h1>
+    <p>{% if request.LANGUAGE_CODE == 'sw' %}Washirika wa jumla, wasambazaji wa mzigo, na madeni tunayodaiwa{% else %}Wholesale partners, distributors, and accounts payable balances{% endif %}</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'supplier_create' business.id %}" class="btn btn-primary desktop-view-only">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      {% if request.LANGUAGE_CODE == 'sw' %}Msambazaji Mpya{% else %}New Supplier{% endif %}
+    </a>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="search-input-wrapper">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="text" class="search-input" placeholder="{% if request.LANGUAGE_CODE == 'sw' %}Tafuta wasambazaji kwa jina au simu...{% else %}Search suppliers by name or phone...{% endif %}" data-target="#suppliers-table tbody tr, .touch-card">
+  </div>
+
+  <div class="filter-pills">
+    <a href="{% url 'supplier_list' business.id %}" class="pill-link {% if not owed_filter_active %}active{% endif %}">
+      {% if request.LANGUAGE_CODE == 'sw' %}Wasambazaji Wote{% else %}All Suppliers{% endif %}
+    </a>
+    <a href="?filter=owed" class="pill-link {% if owed_filter_active %}active{% endif %}" style="{% if owed_filter_active %}background:var(--color-danger); border-color:var(--color-danger); color:#fff;{% endif %}">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      {% if request.LANGUAGE_CODE == 'sw' %}Tunaowadaiwa Pesa Tu{% else %}Suppliers We Owe Money{% endif %}
+    </a>
+  </div>
+</div>
+
+{% if suppliers %}
+<!-- Mobile Touch Card List -->
+<div class="mobile-view-only touch-card-list mb-6">
+  {% for supplier in suppliers %}
+  <div class="touch-card searchable-item">
+    <div class="flex items-center justify-between gap-2 border-b border-[var(--color-border)] pb-2.5">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-9 h-9 rounded-full bg-[var(--color-accent)] text-white flex items-center justify-center font-bold text-sm shrink-0">
+          {{ supplier.name|slice:":1"|upper }}
+        </div>
+        <div class="min-w-0">
+          <h3 class="font-bold text-base text-[var(--color-text)] truncate">{{ supplier.name }}</h3>
+          {% if supplier.phone %}
+          <a href="tel:{{ supplier.phone }}" class="text-xs text-[var(--color-primary)] font-mono hover:underline flex items-center gap-1">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            {{ supplier.phone }}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      <div>
+        {% if supplier.balance_owed > 0 %}
+        <span class="badge badge-danger text-xs">{% if request.LANGUAGE_CODE == 'sw' %}Tunadaiwa{% else %}We Owe{% endif %}</span>
+        {% else %}
+        <span class="badge badge-success text-xs">{% if request.LANGUAGE_CODE == 'sw' %}Imelipwa{% else %}Paid{% endif %}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Debt / Balance Metric Block -->
+    <div class="bg-[var(--color-surface-subtle)] p-2.5 rounded-lg flex items-center justify-between text-sm">
+      <span class="text-xs text-[var(--color-text-muted)]">{% if request.LANGUAGE_CODE == 'sw' %}Deni Analodai{% else %}We Owe Them{% endif %}</span>
+      {% if supplier.balance_owed > 0 %}
+      <span class="font-bold text-base text-[var(--color-danger)]">TSh {{ supplier.balance_owed|floatformat:2 }}</span>
+      {% else %}
+      <span class="font-semibold text-sm text-[var(--color-success)]">TSh 0.00</span>
+      {% endif %}
+    </div>
+
+    <!-- Mobile Touch Actions -->
+    <div class="flex items-center gap-2 pt-1">
+      {% if supplier.phone %}
+      <a href="tel:{{ supplier.phone }}" class="btn btn-secondary btn-sm flex-1 justify-center py-2.5 text-center font-medium">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        {% if request.LANGUAGE_CODE == 'sw' %}Piga Simu{% else %}Call{% endif %}
+      </a>
+      {% endif %}
+      <a href="{% url 'supplier_update' business.id supplier.id %}" class="btn btn-secondary btn-sm flex-1 justify-center py-2.5 text-center font-medium">
+        {% if request.LANGUAGE_CODE == 'sw' %}Hariri{% else %}Edit{% endif %}
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Desktop High-Density Table -->
+<div class="desktop-view-only table-container">
+  <table class="data-table" id="suppliers-table">
+    <thead>
+      <tr>
+        <th>{% if request.LANGUAGE_CODE == 'sw' %}Jina la Msambazaji{% else %}Supplier Name{% endif %}</th>
+        <th>{% if request.LANGUAGE_CODE == 'sw' %}Simu ya Mawasiliano{% else %}Contact Phone{% endif %}</th>
+        <th class="table-num">{% if request.LANGUAGE_CODE == 'sw' %}Tunachodaiwa{% else %}We Owe Them{% endif %}</th>
+        <th>{% if request.LANGUAGE_CODE == 'sw' %}Hali{% else %}Status{% endif %}</th>
+        <th style="text-align:right;">{% if request.LANGUAGE_CODE == 'sw' %}Hatua{% else %}Actions{% endif %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for supplier in suppliers %}
+      <tr>
+        <td>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <div class="brand-icon" style="width:28px; height:28px; font-size:0.82rem; background:var(--color-accent);">
+              {{ supplier.name|slice:":1"|upper }}
+            </div>
+            <strong>{{ supplier.name }}</strong>
+          </div>
+        </td>
+        <td>
+          {% if supplier.phone %}
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <span style="font-family:var(--font-mono); font-size:0.88rem;">{{ supplier.phone }}</span>
+            <a href="tel:{{ supplier.phone }}" class="btn btn-secondary btn-sm" title="Call supplier" style="padding:2px 6px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </a>
+          </div>
+          {% else %}
+          <span style="color:var(--color-text-light); font-size:0.85rem;">{% if request.LANGUAGE_CODE == 'sw' %}Hakuna{% else %}None{% endif %}</span>
+          {% endif %}
+        </td>
+        <td class="table-num">
+          {% if supplier.balance_owed > 0 %}
+          <strong style="color:var(--color-danger); font-size:1rem;">{{ supplier.balance_owed|floatformat:2 }}</strong>
+          {% else %}
+          <span style="color:var(--color-success); font-weight:600;">0.00</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if supplier.balance_owed > 0 %}
+          <span class="badge badge-danger">{% if request.LANGUAGE_CODE == 'sw' %}Tunadaiwa{% else %}Outstanding Debt{% endif %}</span>
+          {% else %}
+          <span class="badge badge-success">{% if request.LANGUAGE_CODE == 'sw' %}Imelipwa Kamili{% else %}Paid in Full{% endif %}</span>
+          {% endif %}
+        </td>
+        <td style="text-align:right;">
+          <a href="{% url 'supplier_update' business.id supplier.id %}" class="btn btn-secondary btn-sm">
+            {% if request.LANGUAGE_CODE == 'sw' %}Hariri{% else %}Edit{% endif %}
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card empty-state">
+  <div class="empty-state-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+  </div>
+  <h3>{% if owed_filter_active %}{% if request.LANGUAGE_CODE == 'sw' %}Hakuna madeni tunayodaiwa na wasambazaji{% else %}No outstanding debts owed to suppliers{% endif %}{% else %}{% if request.LANGUAGE_CODE == 'sw' %}Hakuna wasambazaji waliosajiliwa bado{% else %}No suppliers registered yet{% endif %}{% endif %}</h3>
+  <p>{% if owed_filter_active %}{% if request.LANGUAGE_CODE == 'sw' %}Shehena zote za wasambazaji zimelipwa kikamilifu.{% else %}All supplier deliveries have been paid off.{% endif %}{% else %}{% if request.LANGUAGE_CODE == 'sw' %}Ongeza wasambazaji wako wa jumla na wauzaji wa mzigo hapa.{% else %}Add your wholesale distributors and stock suppliers here.{% endif %}{% endif %}</p>
+  {% if not owed_filter_active %}
+  <a href="{% url 'supplier_create' business.id %}" class="btn btn-primary">+ {% if request.LANGUAGE_CODE == 'sw' %}Ongeza Msambazaji Mpya{% else %}Add New Supplier{% endif %}</a>
+  {% else %}
+  <a href="{% url 'supplier_list' business.id %}" class="btn btn-secondary">{% if request.LANGUAGE_CODE == 'sw' %}Tazama Wasambazaji Wote{% else %}View All Suppliers{% endif %}</a>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- Floating Action Button for Mobile Supplier Registration -->
+<a href="{% url 'supplier_create' business.id %}" class="fab-btn mobile-view-only" aria-label="{% if request.LANGUAGE_CODE == 'sw' %}Ongeza Msambazaji{% else %}Add Supplier{% endif %}" title="{% if request.LANGUAGE_CODE == 'sw' %}Ongeza Msambazaji{% else %}Add Supplier{% endif %}">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+</a>
+{% endblock %}

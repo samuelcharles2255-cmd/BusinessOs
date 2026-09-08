@@ -1,0 +1,124 @@
+{% extends "sales/base.html" %}
+
+{% block title %}{{ business.name }} — Business Hub{% endblock %}
+{% block crumb %}Business Hub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>{{ business.name }}</h1>
+    <p>Central management hub for sales, catalog, inventory, and operations</p>
+  </div>
+  <div class="page-actions">
+    {% if business.owner_id == request.user.id %}
+    <a href="{% url 'business_update' business.id %}" class="btn btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      Edit Settings
+    </a>
+    {% endif %}
+    <a href="{% url 'business_dashboard' business.id %}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      Open Dashboard
+    </a>
+  </div>
+</div>
+
+<!-- Business Info Card -->
+<div class="card" style="margin-bottom: 1.5rem;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <div class="brand-icon" style="width:48px; height:48px; font-size:1.35rem; border-radius:var(--radius);">
+        {{ business.name|slice:":1"|upper }}
+      </div>
+      <div>
+        <h2 style="margin:0 0 0.2rem; font-size:1.25rem;">{{ business.name }}</h2>
+        <div style="font-size:0.88rem; color:var(--color-text-muted);">
+          <span>{{ business.location|default:"No physical address set" }}</span>
+          {% if business.phone %} &middot; <span>{{ business.phone }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+    <div>
+      <span class="badge badge-success" style="font-size:0.85rem;">Active Shop</span>
+    </div>
+  </div>
+</div>
+
+<!-- Departmental Modules Grid -->
+<h2 style="font-size:1.15rem; margin:0 0 1rem; color:var(--color-text);">Operations & Departments</h2>
+<div class="action-grid">
+  <!-- Sales -->
+  <a href="{% url 'record_sale' business.id %}" class="action-card">
+    <div class="action-card-icon" style="background:var(--color-success-bg); color:var(--color-success);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+    </div>
+    <div class="action-card-title">Record Sale (POS)</div>
+    <div class="action-card-desc">Fast counter terminal for cash and mobile money sales.</div>
+  </a>
+
+  <!-- Sales History -->
+  <a href="{% url 'sale_list' business.id %}" class="action-card">
+    <div class="action-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    </div>
+    <div class="action-card-title">Sales History</div>
+    <div class="action-card-desc">Audit orders, view printable receipts, and track balances.</div>
+  </a>
+
+  <!-- Inbound Purchases -->
+  <a href="{% url 'purchase_list' business.id %}" class="action-card">
+    <div class="action-card-icon" style="background:var(--color-accent-light); color:var(--color-accent);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+    </div>
+    <div class="action-card-title">Stock Inflow (Purchases)</div>
+    <div class="action-card-desc">Track stock arriving from suppliers and invoice payments.</div>
+  </a>
+
+  <!-- Products Catalog -->
+  <a href="{% url 'product_list' business.id %}" class="action-card">
+    <div class="action-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    </div>
+    <div class="action-card-title">Products Catalog</div>
+    <div class="action-card-desc">Manage selling prices, cost prices, stock counts & alerts.</div>
+  </a>
+
+  <!-- Customers -->
+  <a href="{% url 'customer_list' business.id %}" class="action-card">
+    <div class="action-card-icon" style="background:var(--color-warning-bg); color:var(--color-warning);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+    </div>
+    <div class="action-card-title">Customers & Debts</div>
+    <div class="action-card-desc">Customer balances, credit tracking, and collection records.</div>
+  </a>
+
+  <!-- Suppliers -->
+  <a href="{% url 'supplier_list' business.id %}" class="action-card">
+    <div class="action-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+    </div>
+    <div class="action-card-title">Suppliers & Creditors</div>
+    <div class="action-card-desc">Wholesale contacts and accounts payable balances.</div>
+  </a>
+
+  <!-- Expenses -->
+  <a href="{% url 'expense_list' business.id %}" class="action-card">
+    <div class="action-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+    </div>
+    <div class="action-card-title">Expenses Ledger</div>
+    <div class="action-card-desc">Log rent, utilities, transport, and daily operational overheads.</div>
+  </a>
+
+  <!-- Staff -->
+  {% if business.owner_id == request.user.id %}
+  <a href="{% url 'staff_list' business.id %}" class="action-card">
+    <div class="action-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+    </div>
+    <div class="action-card-title">Staff Management</div>
+    <div class="action-card-desc">Add cashiers and manage permissions.</div>
+  </a>
+  {% endif %}
+</div>
+{% endblock %}

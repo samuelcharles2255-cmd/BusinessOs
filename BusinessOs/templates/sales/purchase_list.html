@@ -1,0 +1,193 @@
+{% extends "sales/base.html" %}
+
+{% block title %}{% if request.LANGUAGE_CODE == 'sw' %}Manunuzi na Akiba Mpya{% else %}Purchases &amp; Inbound Stock{% endif %} — {{ business.name }}{% endblock %}
+{% block crumb %}{% if request.LANGUAGE_CODE == 'sw' %}Manunuzi{% else %}Purchases{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>{% if request.LANGUAGE_CODE == 'sw' %}Manunuzi na Akiba ya Mzigo{% else %}Purchases &amp; Inbound Stock{% endif %}</h1>
+    <p>{% if request.LANGUAGE_CODE == 'sw' %}Fuatilia shehena za bidhaa kutoka kwa wasambazaji, ankara, na madeni ya wauzaji{% else %}Track wholesale stock deliveries, supplier invoices, and accounts payable balances{% endif %}</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'record_purchase' business.id %}" class="btn btn-primary desktop-view-only">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      {% if request.LANGUAGE_CODE == 'sw' %}Pokea Mzigo Mpya{% else %}Receive Stock (New Purchase){% endif %}
+    </a>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="search-input-wrapper">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="text" class="search-input" placeholder="{% if request.LANGUAGE_CODE == 'sw' %}Tafuta manunuzi kwa msambazaji au ankara #...{% else %}Search purchases by supplier or invoice #...{% endif %}" data-target="#purchases-table tbody tr, .touch-card">
+  </div>
+</div>
+
+{% if purchases %}
+<!-- Mobile Touch Card List -->
+<div class="mobile-view-only touch-card-list mb-6">
+  {% for purchase in purchases %}
+  <div class="touch-card searchable-item">
+    <div class="flex items-center justify-between gap-2 border-b border-[var(--color-border)] pb-2.5">
+      <div>
+        <a href="{% url 'purchase_detail' purchase.id %}" class="font-bold text-base text-[var(--color-primary)] hover:underline">
+          #{{ purchase.id }}
+        </a>
+        <span class="text-xs text-[var(--color-text-muted)] ml-2">{{ purchase.purchase_date|date:"d M Y" }}</span>
+      </div>
+      <div>
+        {% if purchase.status == 'completed' %}
+        <span class="badge badge-success text-xs">{% if request.LANGUAGE_CODE == 'sw' %}Imekamilika{% else %}Completed{% endif %}</span>
+        {% elif purchase.status == 'partial' %}
+        <span class="badge badge-warning text-xs">{% if request.LANGUAGE_CODE == 'sw' %}Sehemu{% else %}Partial{% endif %}</span>
+        {% else %}
+        <span class="badge badge-neutral text-xs">{{ purchase.status|title }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Supplier & Invoice -->
+    <div class="text-sm">
+      <div class="font-semibold text-[var(--color-text)]">
+        {% if purchase.supplier %}
+        {{ purchase.supplier.name }}
+        {% if purchase.supplier.phone %}
+        <span class="text-xs text-[var(--color-text-muted)] font-normal">({{ purchase.supplier.phone }})</span>
+        {% endif %}
+        {% else %}
+        <span class="text-xs text-[var(--color-text-muted)]">{% if request.LANGUAGE_CODE == 'sw' %}Msambazaji wa kawaida{% else %}Unassigned supplier{% endif %}</span>
+        {% endif %}
+      </div>
+      {% if purchase.invoice_no %}
+      <div class="text-xs text-[var(--color-text-muted)] mt-0.5 font-mono">
+        {% if request.LANGUAGE_CODE == 'sw' %}Ankara{% else %}Invoice{% endif %}: #{{ purchase.invoice_no }}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Financial Breakdown Grid -->
+    <div class="grid grid-cols-3 gap-2 bg-[var(--color-surface-subtle)] p-2.5 rounded-lg text-center text-xs">
+      <div>
+        <span class="text-[var(--color-text-muted)] block">{% if request.LANGUAGE_CODE == 'sw' %}Gharama{% else %}Total Cost{% endif %}</span>
+        <span class="font-bold text-sm text-[var(--color-text)]">TSh {{ purchase.total_amount|floatformat:2 }}</span>
+      </div>
+      <div>
+        <span class="text-[var(--color-text-muted)] block">{% if request.LANGUAGE_CODE == 'sw' %}Zilolipwa{% else %}Paid{% endif %}</span>
+        <span class="font-semibold text-sm text-[var(--color-success)]">TSh {{ purchase.amount_paid|floatformat:2 }}</span>
+      </div>
+      <div>
+        <span class="text-[var(--color-text-muted)] block">{% if request.LANGUAGE_CODE == 'sw' %}Salio{% else %}Balance{% endif %}</span>
+        <span class="font-bold text-sm {% if purchase.balance > 0 %}text-[var(--color-danger)]{% else %}text-[var(--color-text-muted)]{% endif %}">
+          TSh {{ purchase.balance|floatformat:2 }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Mobile Touch Actions -->
+    <div class="flex items-center gap-2 pt-1">
+      <a href="{% url 'purchase_detail' purchase.id %}" class="btn btn-secondary btn-sm flex-1 justify-center py-2.5 text-center font-medium">
+        {% if request.LANGUAGE_CODE == 'sw' %}Maelezo{% else %}Details{% endif %}
+      </a>
+      {% if purchase.balance > 0 %}
+      <a href="{% url 'add_payment' business.id 'purchase' purchase.id %}" class="btn btn-primary btn-sm flex-1 justify-center py-2.5 text-center font-medium">
+        {% if request.LANGUAGE_CODE == 'sw' %}Lipa Msambazaji{% else %}Pay Supplier{% endif %}
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Desktop High-Density Table -->
+<div class="desktop-view-only table-container">
+  <table class="data-table" id="purchases-table">
+    <thead>
+      <tr>
+        <th>{% if request.LANGUAGE_CODE == 'sw' %}Manunuzi #{% else %}Purchase #{% endif %}</th>
+        <th>{% if request.LANGUAGE_CODE == 'sw' %}Tarehe{% else %}Date{% endif %}</th>
+        <th>{% if request.LANGUAGE_CODE == 'sw' %}Msambazaji{% else %}Supplier{% endif %}</th>
+        <th>{% if request.LANGUAGE_CODE == 'sw' %}Ankara #{% else %}Invoice #{% endif %}</th>
+        <th class="table-num">{% if request.LANGUAGE_CODE == 'sw' %}Gharama Kamili{% else %}Total Cost{% endif %}</th>
+        <th class="table-num">{% if request.LANGUAGE_CODE == 'sw' %}Kiasi Kilicholipwa{% else %}Amount Paid{% endif %}</th>
+        <th class="table-num">{% if request.LANGUAGE_CODE == 'sw' %}Salio Lililobaki{% else %}Balance Owed{% endif %}</th>
+        <th>{% if request.LANGUAGE_CODE == 'sw' %}Hali{% else %}Status{% endif %}</th>
+        <th style="text-align:right;">{% if request.LANGUAGE_CODE == 'sw' %}Hatua{% else %}Actions{% endif %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for purchase in purchases %}
+      <tr>
+        <td>
+          <a href="{% url 'purchase_detail' purchase.id %}" style="font-weight:700;">#{{ purchase.id }}</a>
+        </td>
+        <td style="color:var(--color-text-muted); font-size:0.85rem;">
+          {{ purchase.purchase_date|date:"d M Y" }}
+        </td>
+        <td>
+          {% if purchase.supplier %}
+          <strong>{{ purchase.supplier.name }}</strong>
+          <div style="font-size:0.78rem; color:var(--color-text-muted);">{{ purchase.supplier.phone|default:"" }}</div>
+          {% else %}
+          <span style="color:var(--color-text-muted);">{% if request.LANGUAGE_CODE == 'sw' %}Msambazaji wa kawaida{% else %}Unassigned supplier{% endif %}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if purchase.invoice_no %}
+          <span class="badge badge-neutral" style="font-family:var(--font-mono);">{{ purchase.invoice_no }}</span>
+          {% else %}
+          <span style="color:var(--color-text-light); font-size:0.8rem;">{% if request.LANGUAGE_CODE == 'sw' %}Hakuna{% else %}None{% endif %}</span>
+          {% endif %}
+        </td>
+        <td class="table-num" style="font-weight:700;">{{ purchase.total_amount|floatformat:2 }}</td>
+        <td class="table-num" style="color:var(--color-success); font-weight:600;">{{ purchase.amount_paid|floatformat:2 }}</td>
+        <td class="table-num" style="{% if purchase.balance > 0 %}color:var(--color-danger); font-weight:700;{% endif %}">
+          {{ purchase.balance|floatformat:2 }}
+        </td>
+        <td>
+          <span class="badge badge-{{ purchase.status }}">{{ purchase.status|title }}</span>
+        </td>
+        <td style="text-align:right;">
+          <div style="display:inline-flex; gap:0.35rem;">
+            <a href="{% url 'purchase_detail' purchase.id %}" class="btn btn-secondary btn-sm" title="View details">{% if request.LANGUAGE_CODE == 'sw' %}Maelezo{% else %}Details{% endif %}</a>
+            {% if purchase.balance > 0 %}
+            <a href="{% url 'add_payment' business.id 'purchase' purchase.id %}" class="btn btn-primary btn-sm" title="Pay supplier">{% if request.LANGUAGE_CODE == 'sw' %}Lipa{% else %}Pay{% endif %}</a>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if is_paginated %}
+<div style="display:flex; justify-content:center; gap:0.5rem; margin-top:1.25rem;">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">&larr; {% if request.LANGUAGE_CODE == 'sw' %}Iliyopita{% else %}Previous{% endif %}</a>
+  {% endif %}
+  <span style="align-self:center; font-size:0.85rem; color:var(--color-text-muted);">
+    {% if request.LANGUAGE_CODE == 'sw' %}Ukurasa{% else %}Page{% endif %} {{ page_obj.number }} {% if request.LANGUAGE_CODE == 'sw' %}kati ya{% else %}of{% endif %} {{ page_obj.paginator.num_pages }}
+  </span>
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">{% if request.LANGUAGE_CODE == 'sw' %}Ifuatayo{% else %}Next{% endif %} &rarr;</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="card empty-state">
+  <div class="empty-state-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+  </div>
+  <h3>{% if request.LANGUAGE_CODE == 'sw' %}Hakuna manunuzi yaliyorekodiwa bado{% else %}No purchases recorded yet{% endif %}</h3>
+  <p>{% if request.LANGUAGE_CODE == 'sw' %}Rekodi shehena ya bidhaa zinazoingia kutoka kwa wasambazaji ili kuweka hesabu sahihi ya akiba.{% else %}Log incoming inventory deliveries from suppliers to keep stock counts and cost prices accurate.{% endif %}</p>
+  <a href="{% url 'record_purchase' business.id %}" class="btn btn-primary">+ {% if request.LANGUAGE_CODE == 'sw' %}Pokea Akiba Mpya{% else %}Receive New Stock{% endif %}</a>
+</div>
+{% endif %}
+
+<!-- Floating Action Button for Mobile Purchase Recording -->
+<a href="{% url 'record_purchase' business.id %}" class="fab-btn mobile-view-only" aria-label="{% if request.LANGUAGE_CODE == 'sw' %}Pokea Mzigo{% else %}Receive Stock{% endif %}" title="{% if request.LANGUAGE_CODE == 'sw' %}Pokea Mzigo{% else %}Receive Stock{% endif %}">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+</a>
+{% endblock %}

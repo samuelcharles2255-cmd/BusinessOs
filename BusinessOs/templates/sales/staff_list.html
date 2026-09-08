@@ -1,0 +1,88 @@
+{% extends "sales/base.html" %}
+
+{% block title %}Staff Team — {{ business.name }}{% endblock %}
+{% block crumb %}Staff{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>Staff &amp; Access Control</h1>
+    <p>Manage store sellers and cashiers who have permission to record sales</p>
+  </div>
+  <div class="page-actions">
+    {% if business.owner_id == request.user.id %}
+    <a href="{% url 'staff_create' business.id %}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Add Staff Member
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="table-container" style="max-width: 800px;">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Staff Member</th>
+        <th>Phone / Username</th>
+        <th>Assigned Role</th>
+        <th>Joined</th>
+        {% if business.owner_id == request.user.id %}
+        <th style="text-align:right;">Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Owner Row -->
+      <tr style="background:var(--color-primary-light);">
+        <td>
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <div class="user-avatar" style="background:var(--color-primary); color:#fff; font-size:0.8rem;">
+              {{ business.owner.get_username|slice:":1"|upper }}
+            </div>
+            <strong>{{ business.owner.get_full_name|default:business.owner.get_username }}</strong>
+          </div>
+        </td>
+        <td style="font-family:var(--font-mono); font-size:0.88rem;">{{ business.owner.get_username }}</td>
+        <td><span class="badge badge-success">Owner</span></td>
+        <td style="color:var(--color-text-muted); font-size:0.82rem;">Founder</td>
+        {% if business.owner_id == request.user.id %}
+        <td style="text-align:right;"><span style="color:var(--color-text-light); font-size:0.8rem;">Primary</span></td>
+        {% endif %}
+      </tr>
+
+      {% for member in staff_members %}
+      <tr>
+        <td>
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <div class="user-avatar" style="font-size:0.8rem;">
+              {{ member.user.get_username|slice:":1"|upper }}
+            </div>
+            <strong>{{ member.user.get_full_name|default:member.user.get_username }}</strong>
+          </div>
+        </td>
+        <td style="font-family:var(--font-mono); font-size:0.88rem;">{{ member.user.get_username }}</td>
+        <td>
+          <span class="badge badge-neutral">{{ member.get_role_display }}</span>
+        </td>
+        <td style="color:var(--color-text-muted); font-size:0.82rem;">{{ member.created_at|date:"d M Y" }}</td>
+        {% if business.owner_id == request.user.id %}
+        <td style="text-align:right;">
+          <form method="post" action="{% url 'staff_delete' business.id member.id %}" style="display:inline; margin:0;" onsubmit="return confirm('Remove {{ member.user.get_username }} from this business?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+          </form>
+        </td>
+        {% endif %}
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" style="text-align:center; padding:1.5rem; color:var(--color-text-muted);">
+          No additional staff members added yet. Only you can access this counter.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

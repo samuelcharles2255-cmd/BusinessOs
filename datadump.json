@@ -1,0 +1,2335 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$mUguHgKrbvN35cgfXbtBvb$HNQYSDEh1vMxw8mdElsT0YRfSwoWIAHLOq3zNWyTmKA=",
+    "last_login": "2026-09-07T07:47:51.995Z",
+    "is_superuser": true,
+    "username": "Samuel",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-31T17:34:56.521Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$GFJ8rw6aAXSwn65LAEGcyi$ZcYCQFK7GDBTtwrtZEcJVNn/5gpRwvmmSWzmDga4hew=",
+    "last_login": "1920-01-31T07:01:34Z",
+    "is_superuser": false,
+    "username": "Mangi_Mrisho",
+    "first_name": "Mangi",
+    "last_name": "Mrisho",
+    "email": "samuel.charles2255@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-01T06:59:52Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$QcYA0Dz8EQk2AYQ90GNy4v$OEMzgaFFoHL2l1AynxAGouTiVXxNCy2tB+mj/w9KF2Q=",
+    "last_login": "2026-09-01T12:35:31.371Z",
+    "is_superuser": false,
+    "username": "testuser",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-01T11:20:07.851Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$aB4who63xbQbThUqqunxdB$Ce+3iyH6XS83YuEgJmyzvmVdHsD/phFVi7/jRz2UPZU=",
+    "last_login": "2026-09-03T18:48:22.166Z",
+    "is_superuser": false,
+    "username": "+255712001001",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-03T18:48:12.997Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$MvFGSOO7QgqPep39kB1WOb$H+aP0JSx1NjRLrmCIp0IEujWJxrE1UWLKUDnFwU7rNs=",
+    "last_login": "2026-09-04T05:54:36.067Z",
+    "is_superuser": false,
+    "username": "+255712345678",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-04T05:54:33.323Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$FHweMfGAyccLYkx1m20kIf$mlF1zjYG0OaAsk1A53t0UyaxADJheJgSUUjDRTX04OI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "+255798765432",
+    "first_name": "Joseph Macha",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-04T06:02:45.090Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$ny5NNMFe3bJguVvpyYSjMV$0Qep4aiwDxCR/Fmgb39wFjNAX2otr5lROQpHCFnTiLM=",
+    "last_login": "2026-09-05T05:40:02.386Z",
+    "is_superuser": false,
+    "username": "+255618130940",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-04T14:31:35.626Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$uE5zEXRXaPyoFAd32AYIcu$W/pauQ3jad0NNm26HCx1C97SiuXV0UG0HPPPZBR7yLo=",
+    "last_login": "2026-09-07T07:44:19.959Z",
+    "is_superuser": false,
+    "username": "Faith",
+    "first_name": "",
+    "last_name": "",
+    "email": "samuelbangapi@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-07T04:35:21.475Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "2z6h8fok17qhf7agj9a7mihel5l24pba",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYoISSAwdu8bkB3bhbZKJAJT1b9XSAztene6N0y4b_O0V1mnhWEE28LlFxKmp-TD8APzvZhU8rYuZI7EnLaaW2F5Xc_2bzBjnWEECtQJ9Yl7ctZ3QWOK6Lh1TRxsVCdek6pS7ND3zI0VH0VVhTA1FAb4fAEuQTmU:1x2CYM:owySCuCsMZy6Sdnc7uSz7zDs0Jwzde_E3Ye0L4HZScY",
+    "expire_date": "2026-09-17T18:52:50.108Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "4b8jq1iix8wu0v9xuzo3pst0ny8yldi5",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP-yZ0OgwCI9eu8byAKLVA1NSnsy_t006UGvM5N5Q6B9q2HvvIY5wwgaLr8sUnpyO0R-ULsvIi1tW-cojkSctotpyfy6ne3foFKvMMIgVfbGmuS81xaNKgZtIWWZ0GPkwTBdtcycyFqnyCktjS8FFaJ2LsLnC71kNvA:1x1Ni7:e2KAi_QTQ1tkaqDb45T1vrIUf1Xb1-gGr3q-6vgBrc0",
+    "expire_date": "2026-09-15T12:35:31.384Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "4mnc0tsoph4mw94ty2dehhoskmv8zq9b",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAQAP-yNbLA9iZxSnreEO1lEkC2lKNC_B1FSgHtzGjeMNC2jsO22DxMCj0EOP0yJnla2YU-qNyrk1rWeWK3J-6wi7tVtdf1aP8GIy0j9EBJPKp0LOaFG2kx55AbbU1YMdG58yiimBJlY8QQKHYWvUlsSS4ePl8ovjlb:1x1MXF:U3VKPibDcIbBC9nIBT3fMKSOvmNHQ_9dYxOI7s-AZr4",
+    "expire_date": "2026-09-15T11:20:13.707Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "55hs72059iksn1qbvpfzk1w6u2fmsn5r",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYoISSAwdu8bkB3bhbZKJAJT1b9XSAztene6N0y4b_O0V1mnhWEE28LlFxKmp-TD8APzvZhU8rYuZI7EnLaaW2F5Xc_2bzBjnWEECtQJ9Yl7ctZ3QWOK6Lh1TRxsVCdek6pS7ND3zI0VH0VVhTA1FAb4fAEuQTmU:1x2CYI:A1flbrztsvl8Nk-EwJDfkcNuo2nQ_Wdvlx28f75lo0U",
+    "expire_date": "2026-09-17T18:52:46.030Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "8hjvlnshkopmzdny2zoj3ubv69f3btyd",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lzxKSbUN2e_TuN4TNy1QlhaY9if8uhR70OjPMG7zsW_V7z6ufE0xAcPllQeIzt0Okh7T7ouLStnUO6kjUabu6LSm_rmf7N6jSK0yAmnhEo8WlSCyDttq5IOjMYHRJmUvkOFo2tmAQQi2EmBNbY4UoM3y-vvU3GQ:1x2CTx:8OKldlhSwTqwf3cc8Pd_3VPK4Es42sHN3kI6COy4m9I",
+    "expire_date": "2026-09-17T18:48:17.125Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "94dmn67qbf6yaa22ep7t6msxmrzzz2ik",
+  "fields": {
+    "session_data": ".eJxVjDEOwjAMAP_iGUVJIXHSkZ03VHbskAJqpaadEH9HlTrAene6Nwy0rXXYmi7DKNCDs3D6hUz5qdNu5EHTfTZ5ntZlZLMn5rDN3GbR1_Vo_waVWoUeuBBGFwumEJ1q9Jokq80XqwE9snTJ53KWxESMGMha51lLl7oYCBU-Xx-EOK4:1x2CVY:MXNRSM8d3_L5667mX4r_uK5eJxWd2L6VD0sFsougz2s",
+    "expire_date": "2026-09-17T18:49:56.465Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "9k3untznbc5ndalyknis697iiqp2cjrc",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAQAP-yNbJ8HynpeYO1ttc4gBwpTirE31GkFNDOjOYNEfetxX3QGucCEwS4_LKE-Un9EOWB_b6wvPRtnRM7EnbawW5Lodf1bP8GDUeDCZLiLgskREs2FdQyaMFJVK6MqD4FL7RQTntXbaVitDJYOXfSSUJbOXy-6Pg3mQ:1x2CUh:kES1dVvktyiak4DmvzTlFJuWJgVbrDymndfVvfZEcwU",
+    "expire_date": "2026-09-17T18:49:03.202Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "bthmt719f5ed8ahxn02tvl1sci0ik3dv",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lzxKSbUN2e_TuN4TNy1QlhaY9if8uhR70OjPMG7zsW_V7z6ufE0xAcPllQeIzt0Okh7T7ouLStnUO6kjUabu6LSm_rmf7N6jSK0yAmnhEo8WlSCyDttq5IOjMYHRJmUvkOFo2tmAQQi2EmBNbY4UoM3y-vvU3GQ:1x2CU2:AnQ06z0gOuKUU3mGIb-JjBaylbNfBKXKCoqt9NrVrqY",
+    "expire_date": "2026-09-17T18:48:22.178Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "f11vyae61p8xdaq58sk5jfnt6mmof784",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP-yZ0OgwCI9eu8byAKLVA1NSnsy_t006UGvM5N5Q6B9q2HvvIY5wwgaLr8sUnpyO0R-ULsvIi1tW-cojkSctotpyfy6ne3foFKvMMIgVfbGmuS81xaNKgZtIWWZ0GPkwTBdtcycyFqnyCktjS8FFaJ2LsLnC71kNvA:1x1MYe:a7aOpnPXve50jgrjnXFhHHeJfuWNZAEjlwVih1pZsUg",
+    "expire_date": "2026-09-15T11:21:40.369Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "fwv3voxdobz9ayfaeri8148pakjhusg7",
+  "fields": {
+    "session_data": ".eJxVjMsOgjAQAP9lz6bpewtH735Ds9stghpIKJyM_25IOOh1ZjJvyLRvY95bXfMk0IOHyy9jKs86H0IeNN8XVZZ5WydWR6JO29Rtkfq6nu3fYKQ2Qg_BWieeLDKGFC1iNd50YoI2oXhH0ScbDTFqlhJc5waOmDRajUV48PD5AqiONqs:1x2CN3:J2tv1Ot5jRiV7-ud8Qt3sICmmpPAnMn8oGxeUhLl9no",
+    "expire_date": "2026-09-17T18:41:09.907Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gh1z4xvekmxcojrq5nw86bhsvy3fznwp",
+  "fields": {
+    "session_data": ".eJxVjLsOwjAMAP_FM4qSkEfTkZ1viBzbkAJKpaadEP-OKnWA9e50b8i4rTVvXZY8MYzg4fTLCtJT2i74ge0-K5rbukxF7Yk6bFfXmeV1Odq_QcVeYYTILMHo5Gy5sWjSaIcYvATnXEjeso1kyWiiGBMXFnc2PrnCBpPFQcPnC-BZN6E:1x2CPe:AF3sMaBwzp7KYrHgr9pYPcIbrfJMrzms9CXJ9txzYhg",
+    "expire_date": "2026-09-17T18:43:50.470Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "jait8xpp0g67uygj4nm3o12n0qw17rwi",
+  "fields": {
+    "session_data": ".eJxVjLsOwjAMAP_FM4qSkEfTkZ1viBzbkAJKpaadEP-OKnWA9e50b8i4rTVvXZY8MYzg4fTLCtJT2i74ge0-K5rbukxF7Yk6bFfXmeV1Odq_QcVeYYTILMHo5Gy5sWjSaIcYvATnXEjeso1kyWiiGBMXFnc2PrnCBpPFQcPnC-BZN6E:1x2CPi:K4rcb7hKAMWa34Jgmurgtw9su7MtkpKsurV0AoYvIX0",
+    "expire_date": "2026-09-17T18:43:54.794Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "k5gvjnmnb9rs7sto6avl4shtxrlg3l40",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuUKJA0lg5AN06YyM4yioaiphmKr-varE0K53p3vBTMde5kNlm9cEA1i4_LKF-C71K8ZD1yqqkzYn1OZanlWm7aayVXrIeMZ_h0JaYIAQJCFGQ2ww2NAZL-3ihExsO0bKlDlgL8kZZ5kd-T4Io8eYfctdRHh_ADKqOD8:1x3U52:l2AzdOSmb7ZHFxmBjJpmf1Vh39RrNOWUyBu3fXltwL4",
+    "expire_date": "2026-09-21T07:47:52.047Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "p4c8xb9mz5qvwgo4sygcrs7r2qmkq32b",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP-yZ0OgwCI9eu8byAKLVA1NSnsy_t006UGvM5N5Q6B9q2HvvIY5wwgaLr8sUnpyO0R-ULsvIi1tW-cojkSctotpyfy6ne3foFKvMMIgVfbGmuS81xaNKgZtIWWZ0GPkwTBdtcycyFqnyCktjS8FFaJ2LsLnC71kNvA:1x1MYt:gs-iG9P-lQeCMyTPVtARzolWehYfXZumnRljDGpZxsQ",
+    "expire_date": "2026-09-15T11:21:55.762Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "sclpenazfrlrw164xk29j5om07591vhx",
+  "fields": {
+    "session_data": ".eJxVjDEOwjAMAP_iGUVJIXHSkZ03VHbskAJqpaadEH9HlTrAene6Nwy0rXXYmi7DKNCDs3D6hUz5qdNu5EHTfTZ5ntZlZLMn5rDN3GbR1_Vo_waVWoUeuBBGFwumEJ1q9Jokq80XqwE9snTJ53KWxESMGMha51lLl7oYCBU-Xx-EOK4:1x2CVc:hnkOXrIp4X2LWvsU_bPW0mQffoZLMlgovKd_MsBzwF0",
+    "expire_date": "2026-09-17T18:50:00.867Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "x2h5hniozd1ofj4q3r0j4c83mxgxnn1b",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP-yZ0Mo4GJ79O4bCOwuUjWQlPZk_Ltp0oNeZybzhhC3tYStyxJmhgk8nH5ZivSUugt-xHpvilpdlzmpPVGH7erWWF7Xo_0blNgLTKC9zshMWRt0I1lxnJMzmS068fEs1g7O5JwGkajRpIu40SMNqAkJET5f-bs4NQ:1x2CQR:THd3p31bLAh3uXR1KLtZYcd2AKLqONC_3ZvbI3bjtIE",
+    "expire_date": "2026-09-17T18:44:39.288Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "yigu8pvd990l5isippls4u4lf1pe1ob7",
+  "fields": {
+    "session_data": ".eJxVjMsOgjAQAP9lz6bpewtH735Ds9stghpIKJyM_25IOOh1ZjJvyLRvY95bXfMk0IOHyy9jKs86H0IeNN8XVZZ5WydWR6JO29Rtkfq6nu3fYKQ2Qg_BWieeLDKGFC1iNd50YoI2oXhH0ScbDTFqlhJc5waOmDRajUV48PD5AqiONqs:1x2CMz:dUFZQTSE1pG-rXyy9To1qW_agtSUOLawNuU4heu7Epg",
+    "expire_date": "2026-09-17T18:41:05.763Z"
+  }
+},
+{
+  "model": "BusinessOs.userprofile",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "Samuel"
+    ],
+    "phone": "",
+    "created_at": "2026-09-05T20:35:37.730Z"
+  }
+},
+{
+  "model": "BusinessOs.userprofile",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "Mangi_Mrisho"
+    ],
+    "phone": "",
+    "created_at": "2026-09-05T20:35:37.746Z"
+  }
+},
+{
+  "model": "BusinessOs.userprofile",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "testuser"
+    ],
+    "phone": "",
+    "created_at": "2026-09-05T20:35:37.759Z"
+  }
+},
+{
+  "model": "BusinessOs.userprofile",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "+255712001001"
+    ],
+    "phone": "+255712001001",
+    "created_at": "2026-09-05T20:35:37.772Z"
+  }
+},
+{
+  "model": "BusinessOs.userprofile",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "+255712345678"
+    ],
+    "phone": "+255712345678",
+    "created_at": "2026-09-05T20:35:37.784Z"
+  }
+},
+{
+  "model": "BusinessOs.userprofile",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "+255798765432"
+    ],
+    "phone": "+255798765432",
+    "created_at": "2026-09-05T20:35:37.796Z"
+  }
+},
+{
+  "model": "BusinessOs.userprofile",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "+255618130940"
+    ],
+    "phone": "+255618130940",
+    "created_at": "2026-09-05T20:35:37.807Z"
+  }
+},
+{
+  "model": "BusinessOs.userprofile",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "Faith"
+    ],
+    "phone": "+255753464482",
+    "created_at": "2026-09-07T04:35:23.928Z"
+  }
+},
+{
+  "model": "BusinessOs.business",
+  "pk": 1,
+  "fields": {
+    "owner": [
+      "Mangi_Mrisho"
+    ],
+    "name": "Mangi Groceries",
+    "location": "Mbeya Mjini,Mbeya",
+    "phone": "0712345678",
+    "created_at": "2026-09-01T07:03:45.604Z"
+  }
+},
+{
+  "model": "BusinessOs.business",
+  "pk": 2,
+  "fields": {
+    "owner": [
+      "Samuel"
+    ],
+    "name": "Faith Mini Store",
+    "location": "Mbeya Mjini,Mbeya",
+    "phone": "0600000000",
+    "created_at": "2026-09-01T18:28:27.795Z"
+  }
+},
+{
+  "model": "BusinessOs.business",
+  "pk": 6,
+  "fields": {
+    "owner": [
+      "+255712001001"
+    ],
+    "name": "Test Shop",
+    "location": "Dar",
+    "phone": "+255712001001",
+    "created_at": "2026-09-03T18:48:16.971Z"
+  }
+},
+{
+  "model": "BusinessOs.business",
+  "pk": 10,
+  "fields": {
+    "owner": [
+      "+255712345678"
+    ],
+    "name": "Kwa Mchaga SuperMarket",
+    "location": "Mafiati,Mbeya",
+    "phone": "+255712345678",
+    "created_at": "2026-09-04T05:54:36.046Z"
+  }
+},
+{
+  "model": "BusinessOs.business",
+  "pk": 11,
+  "fields": {
+    "owner": [
+      "+255618130940"
+    ],
+    "name": "Mgalatia Shop",
+    "location": "Kariakoo,Dar es Salaam",
+    "phone": "+255618130940",
+    "created_at": "2026-09-04T14:31:37.215Z"
+  }
+},
+{
+  "model": "BusinessOs.business",
+  "pk": 12,
+  "fields": {
+    "owner": [
+      "Faith"
+    ],
+    "name": "Faith Cosmetics Store",
+    "location": "Kariakoo,,Dar es Salaam",
+    "phone": "+255753464482",
+    "created_at": "2026-09-07T04:35:23.932Z"
+  }
+},
+{
+  "model": "BusinessOs.businessstaff",
+  "pk": 1,
+  "fields": {
+    "business": 1,
+    "user": [
+      "Mangi_Mrisho"
+    ],
+    "role": "owner",
+    "created_at": "2026-09-01T11:09:22.624Z"
+  }
+},
+{
+  "model": "BusinessOs.businessstaff",
+  "pk": 3,
+  "fields": {
+    "business": 2,
+    "user": [
+      "Mangi_Mrisho"
+    ],
+    "role": "owner",
+    "created_at": "2026-09-03T09:06:08.320Z"
+  }
+},
+{
+  "model": "BusinessOs.businessstaff",
+  "pk": 7,
+  "fields": {
+    "business": 10,
+    "user": [
+      "+255798765432"
+    ],
+    "role": "owner",
+    "created_at": "2026-09-04T06:02:47.520Z"
+  }
+},
+{
+  "model": "BusinessOs.customer",
+  "pk": 2,
+  "fields": {
+    "business": 1,
+    "name": "Macha",
+    "phone": "0700000000",
+    "created_at": "2026-09-01T07:57:26.102Z"
+  }
+},
+{
+  "model": "BusinessOs.customer",
+  "pk": 3,
+  "fields": {
+    "business": 2,
+    "name": "Azizi Sadani",
+    "phone": "0707070707",
+    "created_at": "2026-09-01T18:55:40.541Z"
+  }
+},
+{
+  "model": "BusinessOs.customer",
+  "pk": 4,
+  "fields": {
+    "business": 2,
+    "name": "Azizi Sadani",
+    "phone": "+255707070707",
+    "created_at": "2026-09-03T07:17:22.134Z"
+  }
+},
+{
+  "model": "BusinessOs.customer",
+  "pk": 10,
+  "fields": {
+    "business": 10,
+    "name": "Alex Wakufichwa",
+    "phone": "+255787654321",
+    "created_at": "2026-09-04T06:01:18.457Z"
+  }
+},
+{
+  "model": "BusinessOs.customer",
+  "pk": 11,
+  "fields": {
+    "business": 11,
+    "name": "Amina Hassan",
+    "phone": "+255711111111",
+    "created_at": "2026-09-05T05:41:13.383Z"
+  }
+},
+{
+  "model": "BusinessOs.supplier",
+  "pk": 1,
+  "fields": {
+    "business": 2,
+    "name": "Bakhresa Bakery",
+    "phone": "+255796422468",
+    "created_at": "2026-09-05T10:25:18.239Z"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 1,
+  "fields": {
+    "business": 12,
+    "name": "Make up"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 2,
+  "fields": {
+    "business": 12,
+    "name": "Skin Care"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 3,
+  "fields": {
+    "business": 12,
+    "name": "Fragrance"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 4,
+  "fields": {
+    "business": 12,
+    "name": "HairCare"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 5,
+  "fields": {
+    "business": 12,
+    "name": "Personal Care"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 6,
+  "fields": {
+    "business": 2,
+    "name": "Make up"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 7,
+  "fields": {
+    "business": 2,
+    "name": "Fragrance"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 8,
+  "fields": {
+    "business": 2,
+    "name": "Skin Care"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 9,
+  "fields": {
+    "business": 2,
+    "name": "HairCare"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 10,
+  "fields": {
+    "business": 2,
+    "name": "Bites"
+  }
+},
+{
+  "model": "BusinessOs.category",
+  "pk": 11,
+  "fields": {
+    "business": 2,
+    "name": "Deserts"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 1,
+  "fields": {
+    "business": 1,
+    "name": "Chinese Vegetables",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "500.00",
+    "selling_price": "800.00",
+    "stock_quantity": 25,
+    "low_stock_threshold": 12,
+    "created_at": "2026-09-01T07:28:49.927Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 2,
+  "fields": {
+    "business": 1,
+    "name": "Avocados",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "500.00",
+    "selling_price": "800.00",
+    "stock_quantity": 30,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-01T07:30:32.312Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 3,
+  "fields": {
+    "business": 1,
+    "name": "Cabbages",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "600.00",
+    "selling_price": "1000.00",
+    "stock_quantity": 25,
+    "low_stock_threshold": 6,
+    "created_at": "2026-09-01T07:31:41.847Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 4,
+  "fields": {
+    "business": 1,
+    "name": "Cort Meal",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "1000.00",
+    "selling_price": "1500.00",
+    "stock_quantity": 30,
+    "low_stock_threshold": 7,
+    "created_at": "2026-09-01T07:32:51.591Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 5,
+  "fields": {
+    "business": 1,
+    "name": "Sukuma Wiki",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "600.00",
+    "selling_price": "1000.00",
+    "stock_quantity": 30,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-01T07:34:16.048Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 6,
+  "fields": {
+    "business": 2,
+    "name": "Loaf Bread",
+    "brand": null,
+    "category": 10,
+    "image": "",
+    "cost_price": "1500.00",
+    "selling_price": "2500.00",
+    "stock_quantity": 80,
+    "low_stock_threshold": 7,
+    "created_at": "2026-09-01T18:29:36.291Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 7,
+  "fields": {
+    "business": 2,
+    "name": "Glow SkinCare Oil",
+    "brand": null,
+    "category": 8,
+    "image": "",
+    "cost_price": "4000.00",
+    "selling_price": "7000.00",
+    "stock_quantity": 13,
+    "low_stock_threshold": 20,
+    "created_at": "2026-09-01T18:31:10.822Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 8,
+  "fields": {
+    "business": 2,
+    "name": "Cocoa Chococate",
+    "brand": null,
+    "category": 11,
+    "image": "",
+    "cost_price": "3500.00",
+    "selling_price": "5000.00",
+    "stock_quantity": 25,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-01T18:36:38.965Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 12,
+  "fields": {
+    "business": 6,
+    "name": "Chips",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "500.00",
+    "selling_price": "900.00",
+    "stock_quantity": 30,
+    "low_stock_threshold": 5,
+    "created_at": "2026-09-03T18:48:22.424Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 16,
+  "fields": {
+    "business": 10,
+    "name": "Super Loaf Bread",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "2000.00",
+    "selling_price": "2500.00",
+    "stock_quantity": 35,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-04T05:56:36.583Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 17,
+  "fields": {
+    "business": 10,
+    "name": "Bakhresa buns",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "400.00",
+    "selling_price": "500.00",
+    "stock_quantity": 500,
+    "low_stock_threshold": 30,
+    "created_at": "2026-09-04T05:57:41.737Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 18,
+  "fields": {
+    "business": 10,
+    "name": "Samosa Bites",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "600.00",
+    "selling_price": "1000.00",
+    "stock_quantity": 192,
+    "low_stock_threshold": 20,
+    "created_at": "2026-09-04T05:58:44.229Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 19,
+  "fields": {
+    "business": 10,
+    "name": "Kababu Bites",
+    "brand": null,
+    "category": null,
+    "image": "",
+    "cost_price": "600.00",
+    "selling_price": "1000.00",
+    "stock_quantity": 295,
+    "low_stock_threshold": 30,
+    "created_at": "2026-09-04T05:59:22.992Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 20,
+  "fields": {
+    "business": 11,
+    "name": "Kababu Bites",
+    "brand": null,
+    "category": null,
+    "image": "products/Screenshot_2026-07-09_131259.png",
+    "cost_price": "600.00",
+    "selling_price": "1000.00",
+    "stock_quantity": 280,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-05T04:58:36.020Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 21,
+  "fields": {
+    "business": 11,
+    "name": "Samosa Bites",
+    "brand": null,
+    "category": null,
+    "image": "products/Screenshot_2026-07-09_131341.png",
+    "cost_price": "600.00",
+    "selling_price": "1000.00",
+    "stock_quantity": 170,
+    "low_stock_threshold": 200,
+    "created_at": "2026-09-05T04:59:57.396Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 22,
+  "fields": {
+    "business": 12,
+    "name": "Glow SkinCare Oil",
+    "brand": null,
+    "category": 2,
+    "image": "",
+    "cost_price": "10000.00",
+    "selling_price": "20000.00",
+    "stock_quantity": 30,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-07T04:41:19.955Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 23,
+  "fields": {
+    "business": 12,
+    "name": "Sauvage Doir",
+    "brand": null,
+    "category": 3,
+    "image": "",
+    "cost_price": "25000.00",
+    "selling_price": "40000.00",
+    "stock_quantity": 26,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-07T04:42:12.954Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 24,
+  "fields": {
+    "business": 12,
+    "name": "Hair Shampoo",
+    "brand": null,
+    "category": 4,
+    "image": "",
+    "cost_price": "10000.00",
+    "selling_price": "17000.00",
+    "stock_quantity": 30,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-07T04:43:16.545Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 25,
+  "fields": {
+    "business": 12,
+    "name": "Conditioners",
+    "brand": null,
+    "category": 4,
+    "image": "",
+    "cost_price": "10000.00",
+    "selling_price": "17000.00",
+    "stock_quantity": 27,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-07T04:44:07.480Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 26,
+  "fields": {
+    "business": 12,
+    "name": "Foundations",
+    "brand": null,
+    "category": 1,
+    "image": "",
+    "cost_price": "25000.00",
+    "selling_price": "35000.00",
+    "stock_quantity": 30,
+    "low_stock_threshold": 7,
+    "created_at": "2026-09-07T04:45:09.114Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 27,
+  "fields": {
+    "business": 2,
+    "name": "Foundations",
+    "brand": null,
+    "category": 6,
+    "image": "",
+    "cost_price": "25000.00",
+    "selling_price": "35000.00",
+    "stock_quantity": 25,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-07T06:27:02.999Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 28,
+  "fields": {
+    "business": 2,
+    "name": "Sauvage Doir",
+    "brand": null,
+    "category": 7,
+    "image": "",
+    "cost_price": "30000.00",
+    "selling_price": "40000.00",
+    "stock_quantity": 26,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-07T06:27:40.821Z"
+  }
+},
+{
+  "model": "BusinessOs.product",
+  "pk": 29,
+  "fields": {
+    "business": 2,
+    "name": "Hair Shampoo",
+    "brand": null,
+    "category": 9,
+    "image": "",
+    "cost_price": "10000.00",
+    "selling_price": "17000.00",
+    "stock_quantity": 30,
+    "low_stock_threshold": 10,
+    "created_at": "2026-09-07T06:30:05.360Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 1,
+  "fields": {
+    "product": 1,
+    "quantity_change": -5,
+    "reason": "sale",
+    "note": "Sale #1",
+    "created_at": "2026-09-01T08:48:51.398Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 2,
+  "fields": {
+    "product": 6,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-01T18:29:36.315Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 3,
+  "fields": {
+    "product": 7,
+    "quantity_change": 20,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-01T18:31:10.852Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 4,
+  "fields": {
+    "product": 8,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-01T18:36:38.985Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 5,
+  "fields": {
+    "product": 7,
+    "quantity_change": -5,
+    "reason": "sale",
+    "note": "Sale #2",
+    "created_at": "2026-09-01T18:55:40.528Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 6,
+  "fields": {
+    "product": 6,
+    "quantity_change": -5,
+    "reason": "sale",
+    "note": "Sale #2",
+    "created_at": "2026-09-01T18:55:40.537Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 7,
+  "fields": {
+    "product": 8,
+    "quantity_change": -3,
+    "reason": "sale",
+    "note": "Sale #3",
+    "created_at": "2026-09-01T19:17:31.330Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 8,
+  "fields": {
+    "product": 6,
+    "quantity_change": -4,
+    "reason": "sale",
+    "note": "Sale #3",
+    "created_at": "2026-09-01T19:17:31.337Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 9,
+  "fields": {
+    "product": 8,
+    "quantity_change": -1,
+    "reason": "sale",
+    "note": "Sale #4",
+    "created_at": "2026-09-03T07:05:52.174Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 10,
+  "fields": {
+    "product": 7,
+    "quantity_change": -1,
+    "reason": "sale",
+    "note": "Sale #4",
+    "created_at": "2026-09-03T07:05:52.184Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 11,
+  "fields": {
+    "product": 8,
+    "quantity_change": -1,
+    "reason": "sale",
+    "note": "Sale #5",
+    "created_at": "2026-09-03T07:17:22.127Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 12,
+  "fields": {
+    "product": 6,
+    "quantity_change": -1,
+    "reason": "sale",
+    "note": "Sale #6",
+    "created_at": "2026-09-03T09:13:16.577Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 13,
+  "fields": {
+    "product": 7,
+    "quantity_change": -1,
+    "reason": "sale",
+    "note": "Sale #7",
+    "created_at": "2026-09-03T09:14:55.987Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 22,
+  "fields": {
+    "product": 12,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-03T18:48:22.442Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 32,
+  "fields": {
+    "product": 16,
+    "quantity_change": 35,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-04T05:56:36.602Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 33,
+  "fields": {
+    "product": 17,
+    "quantity_change": 500,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-04T05:57:41.754Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 34,
+  "fields": {
+    "product": 18,
+    "quantity_change": 200,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-04T05:58:44.255Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 35,
+  "fields": {
+    "product": 19,
+    "quantity_change": 300,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-04T05:59:23.011Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 36,
+  "fields": {
+    "product": 19,
+    "quantity_change": -5,
+    "reason": "sale",
+    "note": "Sale #18",
+    "created_at": "2026-09-04T06:01:18.453Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 37,
+  "fields": {
+    "product": 18,
+    "quantity_change": -8,
+    "reason": "sale",
+    "note": "Sale #18",
+    "created_at": "2026-09-04T06:01:18.455Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 38,
+  "fields": {
+    "product": 20,
+    "quantity_change": 300,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-05T04:58:36.031Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 39,
+  "fields": {
+    "product": 21,
+    "quantity_change": 200,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-05T04:59:57.408Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 40,
+  "fields": {
+    "product": 20,
+    "quantity_change": -20,
+    "reason": "sale",
+    "note": "Sale #19",
+    "created_at": "2026-09-05T05:41:13.380Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 41,
+  "fields": {
+    "product": 21,
+    "quantity_change": -30,
+    "reason": "sale",
+    "note": "Sale #20",
+    "created_at": "2026-09-05T05:45:36.604Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 42,
+  "fields": {
+    "product": 6,
+    "quantity_change": 60,
+    "reason": "purchase",
+    "note": "Purchase #1 (invoice INV-2026-098)",
+    "created_at": "2026-09-05T10:30:43.508Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 43,
+  "fields": {
+    "product": 22,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-07T04:41:19.967Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 44,
+  "fields": {
+    "product": 23,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-07T04:42:12.968Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 45,
+  "fields": {
+    "product": 24,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-07T04:43:16.559Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 46,
+  "fields": {
+    "product": 25,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-07T04:44:07.499Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 47,
+  "fields": {
+    "product": 26,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-07T04:45:09.142Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 48,
+  "fields": {
+    "product": 25,
+    "quantity_change": -3,
+    "reason": "sale",
+    "note": "Sale #21",
+    "created_at": "2026-09-07T04:46:18.627Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 49,
+  "fields": {
+    "product": 23,
+    "quantity_change": -4,
+    "reason": "sale",
+    "note": "Sale #22",
+    "created_at": "2026-09-07T04:46:55.238Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 50,
+  "fields": {
+    "product": 27,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-07T06:27:03.016Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 51,
+  "fields": {
+    "product": 28,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-07T06:27:40.835Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 52,
+  "fields": {
+    "product": 29,
+    "quantity_change": 30,
+    "reason": "restock",
+    "note": "Opening stock",
+    "created_at": "2026-09-07T06:30:05.375Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 53,
+  "fields": {
+    "product": 28,
+    "quantity_change": -4,
+    "reason": "sale",
+    "note": "Sale #23",
+    "created_at": "2026-09-07T06:30:33.740Z"
+  }
+},
+{
+  "model": "BusinessOs.stockmovement",
+  "pk": 54,
+  "fields": {
+    "product": 27,
+    "quantity_change": -5,
+    "reason": "sale",
+    "note": "Sale #24",
+    "created_at": "2026-09-07T06:31:13.963Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 1,
+  "fields": {
+    "business": 1,
+    "customer": null,
+    "recorded_by": [
+      "Mangi_Mrisho"
+    ],
+    "created_at": "2026-09-01T08:48:51.388Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 2,
+  "fields": {
+    "business": 2,
+    "customer": 3,
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-01T18:55:40.489Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 3,
+  "fields": {
+    "business": 2,
+    "customer": null,
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-01T19:17:31.313Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 4,
+  "fields": {
+    "business": 2,
+    "customer": null,
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-03T07:05:52.137Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 5,
+  "fields": {
+    "business": 2,
+    "customer": 4,
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-03T07:17:22.117Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 6,
+  "fields": {
+    "business": 2,
+    "customer": 4,
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-03T09:13:16.561Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 7,
+  "fields": {
+    "business": 2,
+    "customer": 4,
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-03T09:14:55.970Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 18,
+  "fields": {
+    "business": 10,
+    "customer": 10,
+    "recorded_by": [
+      "+255712345678"
+    ],
+    "created_at": "2026-09-04T06:01:18.444Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 19,
+  "fields": {
+    "business": 11,
+    "customer": 11,
+    "recorded_by": [
+      "+255618130940"
+    ],
+    "created_at": "2026-09-05T05:41:13.372Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 20,
+  "fields": {
+    "business": 11,
+    "customer": 11,
+    "recorded_by": [
+      "+255618130940"
+    ],
+    "created_at": "2026-09-05T05:45:36.594Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 21,
+  "fields": {
+    "business": 12,
+    "customer": null,
+    "recorded_by": [
+      "Faith"
+    ],
+    "created_at": "2026-09-07T04:46:18.613Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 22,
+  "fields": {
+    "business": 12,
+    "customer": null,
+    "recorded_by": [
+      "Faith"
+    ],
+    "created_at": "2026-09-07T04:46:55.220Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 23,
+  "fields": {
+    "business": 2,
+    "customer": null,
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-07T06:30:33.723Z"
+  }
+},
+{
+  "model": "BusinessOs.sale",
+  "pk": 24,
+  "fields": {
+    "business": 2,
+    "customer": null,
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-07T06:31:13.951Z"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 1,
+  "fields": {
+    "sale": 1,
+    "product": 1,
+    "quantity": 5,
+    "unit_price": "4000.00",
+    "unit_cost": "3500.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 2,
+  "fields": {
+    "sale": 2,
+    "product": 7,
+    "quantity": 5,
+    "unit_price": "7000.00",
+    "unit_cost": "4000.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 3,
+  "fields": {
+    "sale": 2,
+    "product": 6,
+    "quantity": 5,
+    "unit_price": "2500.00",
+    "unit_cost": "1500.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 4,
+  "fields": {
+    "sale": 3,
+    "product": 8,
+    "quantity": 3,
+    "unit_price": "5000.00",
+    "unit_cost": "3500.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 5,
+  "fields": {
+    "sale": 3,
+    "product": 6,
+    "quantity": 4,
+    "unit_price": "2500.00",
+    "unit_cost": "1500.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 6,
+  "fields": {
+    "sale": 4,
+    "product": 8,
+    "quantity": 1,
+    "unit_price": "5000.00",
+    "unit_cost": "3500.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 7,
+  "fields": {
+    "sale": 4,
+    "product": 7,
+    "quantity": 1,
+    "unit_price": "7000.00",
+    "unit_cost": "4000.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 8,
+  "fields": {
+    "sale": 5,
+    "product": 8,
+    "quantity": 1,
+    "unit_price": "5000.00",
+    "unit_cost": "3500.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 9,
+  "fields": {
+    "sale": 6,
+    "product": 6,
+    "quantity": 1,
+    "unit_price": "2500.00",
+    "unit_cost": "1500.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 10,
+  "fields": {
+    "sale": 7,
+    "product": 7,
+    "quantity": 1,
+    "unit_price": "7000.00",
+    "unit_cost": "4000.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 21,
+  "fields": {
+    "sale": 18,
+    "product": 19,
+    "quantity": 5,
+    "unit_price": "1000.00",
+    "unit_cost": "600.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 22,
+  "fields": {
+    "sale": 18,
+    "product": 18,
+    "quantity": 8,
+    "unit_price": "1000.00",
+    "unit_cost": "600.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 23,
+  "fields": {
+    "sale": 19,
+    "product": 20,
+    "quantity": 20,
+    "unit_price": "1000.00",
+    "unit_cost": "600.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 24,
+  "fields": {
+    "sale": 20,
+    "product": 21,
+    "quantity": 30,
+    "unit_price": "1000.00",
+    "unit_cost": "600.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 25,
+  "fields": {
+    "sale": 21,
+    "product": 25,
+    "quantity": 3,
+    "unit_price": "17000.00",
+    "unit_cost": "10000.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 26,
+  "fields": {
+    "sale": 22,
+    "product": 23,
+    "quantity": 4,
+    "unit_price": "40000.00",
+    "unit_cost": "25000.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 27,
+  "fields": {
+    "sale": 23,
+    "product": 28,
+    "quantity": 4,
+    "unit_price": "40000.00",
+    "unit_cost": "30000.00"
+  }
+},
+{
+  "model": "BusinessOs.saleitem",
+  "pk": 28,
+  "fields": {
+    "sale": 24,
+    "product": 27,
+    "quantity": 5,
+    "unit_price": "35000.00",
+    "unit_cost": "25000.00"
+  }
+},
+{
+  "model": "BusinessOs.purchase",
+  "pk": 1,
+  "fields": {
+    "business": 2,
+    "supplier": 1,
+    "invoice_no": "INV-2026-098",
+    "purchase_date": "2026-09-05",
+    "recorded_by": [
+      "Samuel"
+    ],
+    "created_at": "2026-09-05T10:30:43.498Z"
+  }
+},
+{
+  "model": "BusinessOs.purchaseitem",
+  "pk": 1,
+  "fields": {
+    "purchase": 1,
+    "product": 6,
+    "quantity": 60,
+    "unit_cost": "1500.00"
+  }
+},
+{
+  "model": "BusinessOs.expense",
+  "pk": 1,
+  "fields": {
+    "business": 1,
+    "description": "Trasport Delivery Expense",
+    "category": "Vegetables",
+    "amount": "10000.00",
+    "date": "2026-09-01"
+  }
+},
+{
+  "model": "BusinessOs.expense",
+  "pk": 2,
+  "fields": {
+    "business": 1,
+    "description": "Transport Delivery Expense",
+    "category": "Cort Meal Spices",
+    "amount": "10000.00",
+    "date": "2026-09-01"
+  }
+},
+{
+  "model": "BusinessOs.expense",
+  "pk": 6,
+  "fields": {
+    "business": 2,
+    "description": "Transport fees by the delivery employees",
+    "category": "transport",
+    "amount": "10000.00",
+    "date": "2026-09-05"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 1,
+  "fields": {
+    "business": 1,
+    "sale": null,
+    "expense": 1,
+    "purchase": null,
+    "description": "",
+    "amount": "10000.00",
+    "method": "mpesa",
+    "reference": "payed on time",
+    "created_at": "2026-09-01T07:41:54.645Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 2,
+  "fields": {
+    "business": 2,
+    "sale": 2,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "30000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-01T18:55:40.546Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 3,
+  "fields": {
+    "business": 2,
+    "sale": 3,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "25000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-01T19:17:31.338Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 4,
+  "fields": {
+    "business": 2,
+    "sale": 4,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "12000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-03T07:05:52.186Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 5,
+  "fields": {
+    "business": 2,
+    "sale": 5,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "3000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-03T07:17:22.139Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 6,
+  "fields": {
+    "business": 2,
+    "sale": 6,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "2000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-03T09:13:16.582Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 7,
+  "fields": {
+    "business": 2,
+    "sale": 7,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "2000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-03T09:14:55.991Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 19,
+  "fields": {
+    "business": 10,
+    "sale": 18,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "10000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-04T06:01:18.459Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 20,
+  "fields": {
+    "business": 11,
+    "sale": 19,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "18000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-05T05:41:13.385Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 21,
+  "fields": {
+    "business": 11,
+    "sale": 20,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "25000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-05T05:45:36.608Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 22,
+  "fields": {
+    "business": 2,
+    "sale": null,
+    "expense": null,
+    "purchase": 1,
+    "description": "",
+    "amount": "90000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-05T10:30:43.510Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 23,
+  "fields": {
+    "business": 12,
+    "sale": 21,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "51000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-07T04:46:18.628Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 24,
+  "fields": {
+    "business": 12,
+    "sale": 22,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "160000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-07T04:46:55.240Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 25,
+  "fields": {
+    "business": 2,
+    "sale": 23,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "160000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-07T06:30:33.743Z"
+  }
+},
+{
+  "model": "BusinessOs.payment",
+  "pk": 26,
+  "fields": {
+    "business": 2,
+    "sale": 24,
+    "expense": null,
+    "purchase": null,
+    "description": "",
+    "amount": "175000.00",
+    "method": "cash",
+    "reference": "",
+    "created_at": "2026-09-07T06:31:13.964Z"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-09-01T06:59:54.647Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "2",
+    "object_repr": "Mangi_Mrisho",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-09-01T07:01:42.921Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "2",
+    "object_repr": "Mangi_Mrisho",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Email address\", \"Last login\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-09-01T07:03:45.618Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "business"
+    ],
+    "object_id": "1",
+    "object_repr": "Mangi Groceries",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2026-09-01T07:28:49.930Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "product"
+    ],
+    "object_id": "1",
+    "object_repr": "Chinese Vegetables (Mangi Groceries)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2026-09-01T07:30:32.316Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "product"
+    ],
+    "object_id": "2",
+    "object_repr": "Avocados (Mangi Groceries)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2026-09-01T07:31:41.855Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "product"
+    ],
+    "object_id": "3",
+    "object_repr": "Cabbages (Mangi Groceries)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2026-09-01T07:32:51.596Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "product"
+    ],
+    "object_id": "4",
+    "object_repr": "Cort Meal (Mangi Groceries)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2026-09-01T07:34:16.051Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "product"
+    ],
+    "object_id": "5",
+    "object_repr": "Sukuma Wiki (Mangi Groceries)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2026-09-01T07:38:11.130Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "expense"
+    ],
+    "object_id": "1",
+    "object_repr": "Trasport Delivery Expense — 10000",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2026-09-01T07:40:33.473Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "expense"
+    ],
+    "object_id": "2",
+    "object_repr": "Transport Delivery Expense — 10000",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2026-09-01T07:41:54.651Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "payment"
+    ],
+    "object_id": "1",
+    "object_repr": "10000 via mpesa for Trasport Delivery Expense — 10000.00",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2026-09-01T07:55:04.994Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "customer"
+    ],
+    "object_id": "1",
+    "object_repr": "Macha",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2026-09-01T07:56:30.689Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "customer"
+    ],
+    "object_id": "1",
+    "object_repr": "Macha",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2026-09-01T07:57:26.114Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "customer"
+    ],
+    "object_id": "2",
+    "object_repr": "Macha",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2026-09-01T08:48:51.401Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "sale"
+    ],
+    "object_id": "1",
+    "object_repr": "Sale #1 — Mangi Groceries",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"sale item\", \"object\": \"5 x Chinese Vegetables\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2026-09-01T11:09:22.631Z",
+    "user": [
+      "Samuel"
+    ],
+    "content_type": [
+      "BusinessOs",
+      "businessstaff"
+    ],
+    "object_id": "1",
+    "object_repr": "Mangi_Mrisho — owner at Mangi Groceries",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+}
+]

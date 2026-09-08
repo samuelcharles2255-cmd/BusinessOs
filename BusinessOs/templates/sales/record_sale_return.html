@@ -1,0 +1,140 @@
+{% extends "sales/base.html" %}
+{% load static %}
+
+{% block title %}Return Items — Sale #{{ sale.id }} — {{ business.name }}{% endblock %}
+{% block crumb %}Return Items #{{ sale.id }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 0.75rem;">
+  <a href="{% url 'sale_detail' sale.id %}" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Back to Sale Receipt #{{ sale.id }}
+  </a>
+</div>
+
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>Process Return for Sale #{{ sale.id }}</h1>
+    <p>Select eligible items, specify return quantities, and settle customer refunds</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'sale_detail' sale.id %}" class="btn btn-secondary">&larr; Back to Sale Receipt</a>
+  </div>
+</div>
+
+{% if error %}
+<div class="alert alert-danger">
+  <span>{{ error }}</span>
+  <button type="button" class="alert-dismiss">&times;</button>
+</div>
+{% endif %}
+
+<form method="post" id="sale-return-form" novalidate>
+  {% csrf_token %}
+
+  <div class="pos-grid">
+    <!-- Left Column: Eligible Return Items -->
+    <div class="pos-items-card">
+      <h2 style="margin:0 0 1rem; font-size:1.15rem;">Eligible Return Items</h2>
+
+      {% if returnable_items %}
+      <div class="table-container" style="border:none; box-shadow:none; margin:0;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th style="text-align:center;">Sold</th>
+              <th style="text-align:center;">Returned</th>
+              <th class="table-num">Unit Price</th>
+              <th style="width:120px; text-align:center;">Return Qty</th>
+              <th class="table-num" style="width:110px;">Refund</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in returnable_items %}
+            <tr class="return-item-row" data-price="{{ item.unit_price }}" data-max="{{ item.quantity|add:item.returned_quantity|add:"-1"|default:item.quantity }}">
+              <td>
+                <input type="hidden" name="sale_item_id" value="{{ item.id }}">
+                <strong>{{ item.product.name }}</strong>
+              </td>
+              <td style="text-align:center;">{{ item.quantity }}</td>
+              <td style="text-align:center; color:var(--color-text-muted);">{{ item.returned_quantity }}</td>
+              <td class="table-num">{{ item.unit_price|floatformat:2 }}</td>
+              <td style="text-align:center;">
+                <input type="number" name="return_quantity" class="input return-qty-input" min="0" max="{{ item.quantity }}" value="0" style="text-align:center; padding:0.4rem;">
+              </td>
+              <td class="table-num row-subtotal" style="font-weight:700; color:var(--color-danger);">0.00</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state" style="padding:1.5rem 0;">
+        <p>All items from this sale have already been returned in full.</p>
+        <a href="{% url 'sale_detail' sale.id %}" class="btn btn-secondary btn-sm">View Sale</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Settlement Details -->
+    <div class="pos-summary-card">
+      <h2 style="margin:0 0 1rem; font-size:1.15rem;">Refund Settlement</h2>
+
+      <div class="totals-breakdown" style="border-top:none; margin-top:0; padding-top:0;">
+        <div class="totals-row">
+          <span>Items Refund Subtotal</span>
+          <span id="return-subtotal">0.00</span>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label for="id_return_date">Return Date</label>
+        <input type="date" name="return_date" id="id_return_date" class="input" value="{{ form.return_date.value|default:'' }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="id_discount">Restocking Fee / Deduction</label>
+        <input type="number" step="0.01" min="0" name="discount" id="id_discount" class="input" value="{{ form.discount.value|default:'0.00' }}">
+        <div class="form-help">Amount subtracted from refund (e.g. damaged box fee)</div>
+      </div>
+
+      <div class="totals-breakdown">
+        <div class="totals-row grand-total" style="color:var(--color-danger);">
+          <span>Net Refund Amount</span>
+          <span id="net-refund-total">0.00</span>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label for="id_refund_method">Refund Payment Method</label>
+        <select name="refund_method" id="id_refund_method" class="input" required>
+          <option value="cash">Cash</option>
+          <option value="mpesa">M-Pesa</option>
+          <option value="tigopesa">Tigo Pesa</option>
+          <option value="airtelmoney">Airtel Money</option>
+          <option value="halopesa">Halopesa</option>
+        </select>
+      </div>
+
+      {% if returnable_items %}
+      <button type="submit" class="btn btn-danger btn-block btn-lg" id="submit-return" style="margin-top:1rem;">
+        Confirm Return &amp; Refund
+      </button>
+      {% endif %}
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'sales/js/record_sale_return.js' %}"></script>
+<script>
+  // Default date to today if empty
+  const dateInput = document.getElementById('id_return_date');
+  if (dateInput && !dateInput.value) {
+    dateInput.valueAsDate = new Date();
+  }
+</script>
+{% endblock %}
+

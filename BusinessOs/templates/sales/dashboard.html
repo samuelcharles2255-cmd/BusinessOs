@@ -1,0 +1,409 @@
+{% extends "sales/base.html" %}
+{% load static %}
+
+{% block title %}{% if is_swahili %}Dashibodi{% else %}Dashboard{% endif %} — {{ business.name }}{% endblock %}
+{% block crumb %}{% if is_swahili %}Dashibodi{% else %}Dashboard{% endif %}{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title-group">
+    <h1>{% if is_swahili %}Dashibodi ya {{ business.name }}{% else %}{{ business.name }} Dashboard{% endif %}</h1>
+    <p>{% if is_swahili %}Muhtasari wa utendaji wa <strong>{{ period_label }}</strong>{% else %}Performance summary for <strong>{{ period_label }}</strong>{% endif %}</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'record_sale' business.id %}" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      {% if is_swahili %}Rekodi Mauzo{% else %}Record Sale{% endif %}
+    </a>
+    <a href="{% url 'record_purchase' business.id %}" class="btn btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      {% if is_swahili %}Pokea Mzigo{% else %}Receive Stock{% endif %}
+    </a>
+    <a href="{% url 'expense_create' business.id %}" class="btn btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      {% if is_swahili %}Rekodi Matumizi{% else %}Add Expense{% endif %}
+    </a>
+  </div>
+</div>
+
+<!-- Financial Summary KPIs -->
+<div class="kpi-grid">
+  <div class="kpi-card kpi-profit">
+    <span class="kpi-label">{% if is_swahili %}Faida Halisi{% else %}Net Profit{% endif %}</span>
+    <span class="kpi-value {% if summary.net_profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+      {{ summary.net_profit|floatformat:2 }}
+    </span>
+    <span class="kpi-sub">{% if is_swahili %}Faida ghafi kutoa matumizi{% else %}Gross profit minus expenses{% endif %}</span>
+  </div>
+
+  <div class="kpi-card kpi-revenue">
+    <span class="kpi-label">{% if is_swahili %}Mapato Halisi{% else %}Net Revenue{% endif %}</span>
+    <span class="kpi-value">{{ summary.revenue|floatformat:2 }}</span>
+    <span class="kpi-sub">{% if is_swahili %}Mauzo baada ya marejesho{% else %}Sales revenue after returns{% endif %}</span>
+  </div>
+
+  <div class="kpi-card kpi-cogs">
+    <span class="kpi-label">{% if is_swahili %}Faida Ghafi{% else %}Gross Profit{% endif %}</span>
+    <span class="kpi-value text-success">{{ summary.gross_profit|floatformat:2 }}</span>
+    <span class="kpi-sub">{% if is_swahili %}Gharama ya Mzigo: {{ summary.cost_of_goods_sold|floatformat:2 }}{% else %}COGS: {{ summary.cost_of_goods_sold|floatformat:2 }}{% endif %}</span>
+  </div>
+
+  <div class="kpi-card kpi-expense">
+    <span class="kpi-label">{% if is_swahili %}Gharama za Uendeshaji{% else %}Operating Expenses{% endif %}</span>
+    <span class="kpi-value">{{ summary.expenses|floatformat:2 }}</span>
+    <span class="kpi-sub">{% if is_swahili %}Matumizi na gharama za kazi{% else %}Overheads and running costs{% endif %}</span>
+  </div>
+</div>
+
+<!-- Urgent Alerts Row (Low Stock & Debtors) -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+  <!-- Low Stock Alert Box -->
+  <div class="card" style="margin-bottom:0; border-left: 4px solid var(--color-danger);">
+    <div class="card-header" style="margin-bottom: 0.75rem;">
+      <div>
+        <h2 class="card-title" style="color: var(--color-danger); display:flex; align-items:center; gap:0.4rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          {% if is_swahili %}Tahadhari ya Akiba Ndogo{% else %}Low Stock Warning{% endif %}
+        </h2>
+        <div class="card-subtitle">{% if is_swahili %}Bidhaa zilizofika kiwango cha kuagiza tena{% else %}Items at or below reorder threshold{% endif %}</div>
+      </div>
+      <a href="{% url 'product_list' business.id %}" class="btn btn-secondary btn-sm">{% if is_swahili %}Orodha{% else %}Catalog{% endif %}</a>
+    </div>
+
+    {% if low_stock %}
+    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.6rem;">
+      {% for product in low_stock %}
+      <li style="display:flex; justify-content:space-between; align-items:center; padding: 0.4rem 0; border-bottom: 1px solid var(--color-border);">
+        <div>
+          <strong>{{ product.name }}</strong>
+          <div style="font-size:0.8rem; color:var(--color-danger); font-weight:600;">
+            {% if is_swahili %}Zimebaki {{ product.stock_quantity }} pekee (kiwango {{ product.low_stock_threshold }}){% else %}Only {{ product.stock_quantity }} left (min {{ product.low_stock_threshold }}){% endif %}
+          </div>
+        </div>
+        <a href="{% url 'restock_product' business.id product.id %}" class="btn btn-primary btn-sm">+ {% if is_swahili %}Ongeza{% else %}Restock{% endif %}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div style="padding: 1rem 0; color: var(--color-success); font-weight: 500; font-size: 0.9rem; display:flex; align-items:center; gap:0.4rem;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      {% if is_swahili %}Akiba yote ya bidhaa ipo salama.{% else %}All inventory is above safe stock levels.{% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Customer Debt Alert Box -->
+  <div class="card" style="margin-bottom:0; border-left: 4px solid var(--color-warning);">
+    <div class="card-header" style="margin-bottom: 0.75rem;">
+      <div>
+        <h2 class="card-title" style="color: var(--color-warning); display:flex; align-items:center; gap:0.4rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+          {% if is_swahili %}Madeni ya Wateja{% else %}Customer Balances Owed{% endif %}
+        </h2>
+        <div class="card-subtitle">{% if is_swahili %}Wateja wenye madeni yasiyolipwa{% else %}Customers with unpaid balances{% endif %}</div>
+      </div>
+      <a href="{% url 'customer_list' business.id %}?filter=debt" class="btn btn-secondary btn-sm">{% if is_swahili %}Madeni Yote{% else %}All Debtors{% endif %}</a>
+    </div>
+
+    {% if customers_in_debt %}
+    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.6rem;">
+      {% for cust in customers_in_debt %}
+      <li style="display:flex; justify-content:space-between; align-items:center; padding: 0.4rem 0; border-bottom: 1px solid var(--color-border);">
+        <div>
+          <strong>{{ cust.name }}</strong>
+          <div style="font-size:0.8rem; color:var(--color-text-muted);">
+            {{ cust.phone|default:"No phone recorded" }}
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <span class="badge badge-warning" style="font-size:0.82rem;">{% if is_swahili %}Anadaiwa{% else %}Owes{% endif %} {{ cust.balance|floatformat:2 }}</span>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div style="padding: 1rem 0; color: var(--color-success); font-weight: 500; font-size: 0.9rem; display:flex; align-items:center; gap:0.4rem;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      {% if is_swahili %}Hakuna madeni ya wateja yasiyolipwa.{% else %}No outstanding customer debts.{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Sales Performance Trend Chart -->
+<div class="card" style="margin-bottom: 1.5rem;">
+  <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+    <div>
+      <h2 class="card-title">{% if is_swahili %}Mwenendo wa Mauzo na Mapato ya Kila Siku{% else %}Daily Sales &amp; Revenue Trend{% endif %}</h2>
+      <div class="card-subtitle">{% if is_swahili %}Mauzo ya kaunta na mapato kwa {{ period_label }}{% else %}Live daily counter sales volume and turnover for {{ period_label }}{% endif %}</div>
+    </div>
+    <div style="font-size:0.85rem; color:var(--color-primary); font-weight:600; background:var(--color-primary-light); padding:3px 10px; border-radius:var(--radius-full);">
+      {% if is_swahili %}Chati Maingiliano{% else %}Interactive Chart{% endif %}
+    </div>
+  </div>
+  <div class="chart-wrapper" style="position:relative; height:280px; width:100%;">
+    <canvas id="trendChart"></canvas>
+  </div>
+</div>
+
+<!-- Ask AI Assistant Banner -->
+<div class="card" style="background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-subtle) 100%); border-left: 4px solid var(--color-primary); margin-bottom: 1.5rem;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:0.75rem;">
+    <div style="display:flex; align-items:center; gap:0.6rem;">
+      <div class="brand-icon" style="width:34px; height:34px; font-size:0.95rem; border-radius:var(--radius-sm); background:var(--color-primary); color:#fff;">AI</div>
+      <div>
+        <h3 style="margin:0; font-size:1.05rem;">{% if is_swahili %}Msaidizi wa Biashara wa AI{% else %}Biashara AI Assistant{% endif %}</h3>
+        <p style="margin:0; font-size:0.82rem; color:var(--color-text-muted);">{% if is_swahili %}Majibu ya papo hapo kuhusu fedha na akiba kutoka kwenye kumbukumbu zako halisi{% else %}Instant financial and stock answers computed from your live records{% endif %}</p>
+      </div>
+    </div>
+    <a href="{% url 'assistant:chat_page' business.id %}" class="btn btn-primary btn-sm">
+      {% if is_swahili %}Fungua Msaidizi &rarr;{% else %}Open Assistant &rarr;{% endif %}
+    </a>
+  </div>
+  <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+    <a href="{% url 'assistant:chat_page' business.id %}" class="suggestion-chip">{% if is_swahili %}Nilipata faida kiasi gani mwezi huu?{% else %}How much profit did I make this month?{% endif %}</a>
+    <a href="{% url 'assistant:chat_page' business.id %}" class="suggestion-chip">{% if is_swahili %}Ni bidhaa gani zinazouzika haraka?{% else %}Which products are selling fastest?{% endif %}</a>
+    <a href="{% url 'assistant:chat_page' business.id %}" class="suggestion-chip">{% if is_swahili %}Nani anadaiwa fedha?{% else %}Who owes me money?{% endif %}</a>
+    <a href="{% url 'assistant:chat_page' business.id %}" class="suggestion-chip">{% if is_swahili %}Niongeze bidhaa gani stoo?{% else %}What should I restock?{% endif %}</a>
+  </div>
+</div>
+
+<!-- Recent Orders & Expenses Split -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+  <!-- Recent Sales -->
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">{% if request.LANGUAGE_CODE == 'sw' %}Mauzo ya Hivi Karibuni{% else %}Recent Sales{% endif %}</h2>
+        <div class="card-subtitle">{% if request.LANGUAGE_CODE == 'sw' %}Miamala ya mwisho ya kaunta{% else %}Latest counter transactions{% endif %}</div>
+      </div>
+      <a href="{% url 'sale_list' business.id %}" class="btn btn-secondary btn-sm">{% if request.LANGUAGE_CODE == 'sw' %}Tazama Yote{% else %}View All{% endif %}</a>
+    </div>
+
+    {% if recent_sales %}
+    <!-- Mobile Card List View -->
+    <div class="mobile-view-only">
+      <div class="touch-card-list">
+        {% for sale in recent_sales %}
+        <a href="{% url 'sale_detail' sale.id %}" class="touch-card" style="text-decoration:none; color:inherit; padding:0.75rem 0.85rem; margin-bottom:0.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+            <span style="font-weight:700; color:var(--color-primary); font-size:0.95rem;">#{{ sale.id }}</span>
+            <span class="badge badge-{{ sale.status }}" style="font-size:0.72rem;">{{ sale.status|title }}</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:var(--color-text-muted); font-size:0.85rem;">{{ sale.customer.name|default:"Walk-in" }}</span>
+            <span style="font-weight:700; font-size:0.95rem; color:var(--color-text);">{{ sale.total_amount|floatformat:2 }}</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Desktop Table View -->
+    <div class="desktop-view-only table-container" style="border:none; box-shadow:none; margin:0;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>{% if request.LANGUAGE_CODE == 'sw' %}Oda{% else %}Order{% endif %}</th>
+            <th>{% if request.LANGUAGE_CODE == 'sw' %}Mteja{% else %}Customer{% endif %}</th>
+            <th class="table-num">{% if request.LANGUAGE_CODE == 'sw' %}Jumla{% else %}Total{% endif %}</th>
+            <th>{% if request.LANGUAGE_CODE == 'sw' %}Hali{% else %}Status{% endif %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sale in recent_sales %}
+          <tr>
+            <td><a href="{% url 'sale_detail' sale.id %}" style="font-weight:600;">#{{ sale.id }}</a></td>
+            <td>{{ sale.customer.name|default:"Walk-in" }}</td>
+            <td class="table-num">{{ sale.total_amount|floatformat:2 }}</td>
+            <td><span class="badge badge-{{ sale.status }}">{{ sale.status|title }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state" style="padding: 1.5rem 0;">
+      <p>{% if request.LANGUAGE_CODE == 'sw' %}Hakuna mauzo yaliyorekodiwa bado.{% else %}No sales recorded yet.{% endif %}</p>
+      <a href="{% url 'record_sale' business.id %}" class="btn btn-primary btn-sm">+ {% if request.LANGUAGE_CODE == 'sw' %}Rekodi Mauzo ya Kwanza{% else %}Record First Sale{% endif %}</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Recent Expenses -->
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">{% if request.LANGUAGE_CODE == 'sw' %}Gharama za Hivi Karibuni{% else %}Recent Expenses{% endif %}</h2>
+        <div class="card-subtitle">{% if request.LANGUAGE_CODE == 'sw' %}Matumizi na gharama za uendeshaji{% else %}Overheads and running costs{% endif %}</div>
+      </div>
+      <a href="{% url 'expense_list' business.id %}" class="btn btn-secondary btn-sm">{% if request.LANGUAGE_CODE == 'sw' %}Tazama Yote{% else %}View All{% endif %}</a>
+    </div>
+
+    {% if recent_expenses %}
+    <!-- Mobile Card List View -->
+    <div class="mobile-view-only">
+      <div class="touch-card-list">
+        {% for exp in recent_expenses %}
+        <div class="touch-card" style="padding:0.75rem 0.85rem; margin-bottom:0.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.35rem;">
+            <span style="font-weight:600; font-size:0.92rem;">{{ exp.description }}</span>
+            <span style="color:var(--color-danger); font-weight:700; font-size:0.95rem;">-{{ exp.amount|floatformat:2 }}</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--color-text-muted);">
+            <span class="badge badge-neutral" style="font-size:0.7rem;">{{ exp.category|default:"General" }}</span>
+            <span>{{ exp.date|date:"d M Y" }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Desktop Table View -->
+    <div class="desktop-view-only table-container" style="border:none; box-shadow:none; margin:0;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>{% if request.LANGUAGE_CODE == 'sw' %}Maelezo{% else %}Description{% endif %}</th>
+            <th>{% if request.LANGUAGE_CODE == 'sw' %}Kitengo{% else %}Category{% endif %}</th>
+            <th>{% if request.LANGUAGE_CODE == 'sw' %}Tarehe{% else %}Date{% endif %}</th>
+            <th class="table-num">{% if request.LANGUAGE_CODE == 'sw' %}Kiasi{% else %}Amount{% endif %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for exp in recent_expenses %}
+          <tr>
+            <td><strong>{{ exp.description }}</strong></td>
+            <td><span class="badge badge-neutral">{{ exp.category|default:"General" }}</span></td>
+            <td style="color:var(--color-text-muted); font-size:0.85rem;">{{ exp.date|date:"d M" }}</td>
+            <td class="table-num" style="color:var(--color-danger); font-weight:600;">{{ exp.amount|floatformat:2 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state" style="padding: 1.5rem 0;">
+      <p>{% if request.LANGUAGE_CODE == 'sw' %}Hakuna matumizi yaliyorekodiwa mwezi huu.{% else %}No expenses logged this month.{% endif %}</p>
+      <a href="{% url 'expense_create' business.id %}" class="btn btn-secondary btn-sm">+ {% if request.LANGUAGE_CODE == 'sw' %}Rekodi Matumizi{% else %}Log Expense{% endif %}</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const ctx = document.getElementById("trendChart");
+  if (!ctx) return;
+
+  const labels = {{ trend_labels|default:"[]"|safe }};
+  const revenueData = {{ trend_revenue|default:"[]"|safe }};
+  const unitsData = {{ trend_units|default:"[]"|safe }};
+
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const gridColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
+  const textColor = isDark ? "#94a3b8" : "#64748b";
+
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels.length ? labels : ["No Sales Data"],
+      datasets: [
+        {
+          label: "Revenue (TZS)",
+          data: revenueData.length ? revenueData : [0],
+          borderColor: "#0f5132",
+          backgroundColor: "rgba(15, 81, 50, 0.12)",
+          borderWidth: 2.5,
+          tension: 0.35,
+          fill: true,
+          pointBackgroundColor: "#0f5132",
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          yAxisID: "y",
+        },
+        {
+          label: "Units Sold",
+          data: unitsData.length ? unitsData : [0],
+          borderColor: "#d97706",
+          backgroundColor: "transparent",
+          borderWidth: 2,
+          borderDash: [4, 4],
+          tension: 0.35,
+          fill: false,
+          pointBackgroundColor: "#d97706",
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          yAxisID: "y1",
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: "index",
+        intersect: false,
+      },
+      plugins: {
+        legend: {
+          position: "top",
+          labels: {
+            color: textColor,
+            font: { family: "system-ui", size: 12, weight: "500" },
+          }
+        },
+        tooltip: {
+          backgroundColor: isDark ? "#1e293b" : "#0f172a",
+          titleColor: "#ffffff",
+          bodyColor: "#ffffff",
+          borderColor: isDark ? "#334155" : "transparent",
+          borderWidth: 1,
+          padding: 10,
+          boxPadding: 4,
+          usePointStyle: true,
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: gridColor },
+          ticks: { color: textColor, font: { size: 11 } },
+        },
+        y: {
+          type: "linear",
+          display: true,
+          position: "left",
+          grid: { color: gridColor },
+          ticks: {
+            color: textColor,
+            font: { size: 11 },
+            callback: function (val) {
+              return "TZS " + Number(val).toLocaleString();
+            }
+          }
+        },
+        y1: {
+          type: "linear",
+          display: true,
+          position: "right",
+          grid: { drawOnChartArea: false },
+          ticks: {
+            color: "#d97706",
+            font: { size: 11 },
+            precision: 0,
+          }
+        }
+      }
+    }
+  });
+});
+</script>
+{% endblock %}
+
+
