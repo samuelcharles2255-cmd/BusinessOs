@@ -70,8 +70,22 @@ from .models import (
     UserProfile,
 )
 from .utils import normalize_phone
+from .models import UserPost
+from .forms import UserPostForm
 
 User = get_user_model()
+
+def index(request):
+    if request.method == 'POST':
+        form = UserPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()  # Bytes upload to Cloudinary; metadata saves to alwaysdata
+            return redirect('index')
+    else:
+        form = UserPostForm()
+    
+    posts = UserPost.objects.all().order_by('-created_at')
+    return render(request, 'index.html', {'form': form, 'posts': posts})
 
 
 # ---------------------------------------------------------------------------

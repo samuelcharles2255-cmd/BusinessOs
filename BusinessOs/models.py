@@ -27,6 +27,12 @@ ZERO = Decimal("0")
 # USER PROFILE -- separate phone number from auth username
 # ---------------------------------------------------------------------------
 
+
+class UserPost(models.Model):
+    title = models.CharField(max_length=100)
+    photo = models.ImageField(upload_to='photos/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,

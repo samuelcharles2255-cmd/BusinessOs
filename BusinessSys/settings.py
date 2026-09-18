@@ -5,6 +5,9 @@ import os
 from pathlib import Path
 
 
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,7 +19,8 @@ if env_file.exists():
             line = line.strip()
             if line and not line.startswith('#') and '=' in line:
                 k, v = line.split('=', 1)
-                os.environ.setdefault(k.strip(), v.strip())
+                v = v.strip().strip("'\"")
+                os.environ.setdefault(k.strip(), v)
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.7-flash")
@@ -26,12 +30,12 @@ GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.7-flash")
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5opaosub89o-t(ft2)7*-d2thot+xsdb!k*t+du%vtsf42+wew'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-5opaosub89o-t(ft2)7*-d2thot+xsdb!k*t+du%vtsf42+wew')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver", ".onrender.com"]
 
 
 # Application definition
@@ -45,7 +49,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'BusinessOs',
     'ai',
+    'cloudinary_storage',
+    
+    'cloudinary',
 ]
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'BusinessSys.urls'
@@ -90,17 +107,19 @@ DATABASES = {
        "ENGINE": "django.db.backends.mysql",
         "NAME": os.environ.get("DB_NAME", "pos_db"),
         "USER": os.environ.get("DB_USER", "pos_user"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "secure_password"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
         "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
         "PORT": os.environ.get("DB_PORT", "3306"),
-        "CONN_MAX_AGE": 60,
+        "CONN_MAX_AGE": 0,
         "OPTIONS": {
             "charset": "utf8mb4",
-            # Enforces STRICT_TRANS_TABLES to prevent silent truncation
-            "init_command": "SET default_storage_engine=INNODB, sql_mode='STRICT_TRANS_TABLES'",
+            "connect_timeout": 60,
+            # Enforces STRICT_TRANS_TABLES and sets session timeouts for remote DB stability
+            "init_command": "SET default_storage_engine=INNODB, sql_mode='STRICT_TRANS_TABLES', wait_timeout=28800, net_read_timeout=300, net_write_timeout=300",
         }
     }
 }
+
 
 
 # Password validation
@@ -145,6 +164,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from .models import UserPost
 
 from .models import (
     Brand,
@@ -26,6 +27,11 @@ from .utils import normalize_phone
 User = get_user_model()
 
 TEXT_ATTRS = {"class": "input"}
+
+class UserPostForm(forms.ModelForm):
+    class Meta:
+        model = UserPost
+        fields = ['title', 'photo']
 
 
 class BusinessForm(forms.ModelForm):
