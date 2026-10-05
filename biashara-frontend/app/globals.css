@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #090d16;
+    --card: rgba(255, 255, 255, 0.85);
+    --card-foreground: #090d16;
+    --border: rgba(15, 23, 42, 0.08);
+    --border-plasma: rgba(99, 102, 241, 0.35);
+    --primary: #059669;
+    --primary-foreground: #ffffff;
+    --cyan-glow: rgba(6, 182, 212, 0.15);
+    --violet-glow: rgba(124, 58, 237, 0.12);
+  }
+
+  .dark {
+    --background: #03060f;
+    --foreground: #f8fafc;
+    --card: rgba(11, 16, 28, 0.65);
+    --card-foreground: #f8fafc;
+    --border: rgba(255, 255, 255, 0.07);
+    --border-plasma: rgba(99, 102, 241, 0.45);
+    --primary: #10b981;
+    --primary-foreground: #03060f;
+    --cyan-glow: rgba(6, 182, 212, 0.25);
+    --violet-glow: rgba(124, 58, 237, 0.2);
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Cosmic Nebula Drift Animations */
+@keyframes nebula-drift-1 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate3d(40px, -25px, 0) scale(1.08);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.55;
+  }
+}
+
+@keyframes nebula-drift-2 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate3d(-35px, 30px, 0) scale(1.12);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.5;
+  }
+}
+
+@keyframes cosmic-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+}
+
+.animate-nebula-1 {
+  animation: nebula-drift-1 28s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-nebula-2 {
+  animation: nebula-drift-2 34s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-cosmic-pulse {
+  animation: cosmic-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Glass & Specular Light Reflection */
+.glass-panel {
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 4px 20px -4px rgba(0, 0, 0, 0.25);
+}
+
+.dark .glass-panel {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.07), 0 8px 32px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* Hover plasma illumination on interactive surfaces */
+.hover-plasma {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-plasma:hover {
+  border-color: var(--border-plasma);
+  box-shadow: 0 0 24px -4px var(--cyan-glow), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Linear-inspired ultra-thin custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.35);
+}

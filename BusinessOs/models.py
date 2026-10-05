@@ -187,18 +187,7 @@ class Business(models.Model):
         restock nudge. F() comparison, not a Python loop over every product."""
         return self.products.filter(stock_quantity__lte=F("low_stock_threshold"))
 
-    def customers_in_debt(self):
-        """
-        Customers with an outstanding balance, computed set-wide.
-
-        This is NOT the same as annotating Sum('sales__items...') and
-        Sum('sales__payments__amount') together on one annotate() call --
-        that's a classic Django trap: joining two separate reverse
-        relations (items and payments) in the same annotate() fans out
-        into a cross product, so both sums come back multiplied and wrong
-        the moment a customer has more than one of either. Two independent
-        Subqueries side-steps that entirely.
-        """
+    def customers_with_balances(self):
         revenue_sq = (
             SaleItem.objects.filter(sale__customer=OuterRef("pk"))
             .values("sale__customer")
@@ -217,12 +206,12 @@ class Business(models.Model):
                 paid=Coalesce(Subquery(paid_sq, output_field=MONEY), ZERO),
             )
             .annotate(balance=ExpressionWrapper(F("revenue") - F("paid"), output_field=MONEY))
-            .filter(balance__gt=0)
-            .order_by("-balance")
         )
 
-    def suppliers_owed(self):
-        """Same Subquery pattern, mirrored for money YOU owe suppliers."""
+    def customers_in_debt(self):
+        return self.customers_with_balances().filter(balance__gt=0).order_by("-balance")
+
+    def suppliers_with_balances(self):
         cost_sq = (
             PurchaseItem.objects.filter(purchase__supplier=OuterRef("pk"))
             .values("purchase__supplier")
@@ -241,22 +230,23 @@ class Business(models.Model):
                 paid=Coalesce(Subquery(paid_sq, output_field=MONEY), ZERO),
             )
             .annotate(balance=ExpressionWrapper(F("owed") - F("paid"), output_field=MONEY))
-            .filter(balance__gt=0)
-            .order_by("-balance")
         )
+
+    def suppliers_owed(self):
+        return self.suppliers_with_balances().filter(balance__gt=0).order_by("-balance")
 
     def total_customer_debt(self):
         revenue = SaleItem.objects.filter(sale__business=self).aggregate(
             total=Sum(ExpressionWrapper(F("unit_price") * F("quantity"), output_field=MONEY))
         )["total"] or ZERO
-        paid = Payment.objects.filter(sale__business=self).aggregate(total=Sum("amount"))["total"] or ZERO
+        paid = Payment.objects.filter(business=self, sale__isnull=False).aggregate(total=Sum("amount"))["total"] or ZERO
         return revenue - paid
 
     def total_supplier_debt(self):
         owed = PurchaseItem.objects.filter(purchase__business=self).aggregate(
             total=Sum(ExpressionWrapper(F("unit_cost") * F("quantity"), output_field=MONEY))
         )["total"] or ZERO
-        paid = Payment.objects.filter(purchase__business=self).aggregate(total=Sum("amount"))["total"] or ZERO
+        paid = Payment.objects.filter(business=self, purchase__isnull=False).aggregate(total=Sum("amount"))["total"] or ZERO
         return owed - paid
 
     def can_record_sales(self, user):
@@ -320,13 +310,8 @@ class Customer(models.Model):
 
     @property
     def balance_owed(self):
-        """
-        Single-customer version, kept for detail pages where one extra
-        query is fine. For a LIST of customers, use
-        Business.customers_in_debt() instead -- calling this property in a
-        loop over a queryset is exactly the N+1 pattern the rest of this
-        file goes out of its way to avoid.
-        """
+        if hasattr(self, "balance"):
+            return self.balance
         revenue = SaleItem.objects.filter(sale__customer=self).aggregate(
             total=Sum(ExpressionWrapper(F("unit_price") * F("quantity"), output_field=MONEY))
         )["total"] or ZERO
@@ -363,6 +348,8 @@ class Supplier(models.Model):
 
     @property
     def balance_owed(self):
+        if hasattr(self, "balance"):
+            return self.balance
         owed = PurchaseItem.objects.filter(purchase__supplier=self).aggregate(
             total=Sum(ExpressionWrapper(F("unit_cost") * F("quantity"), output_field=MONEY))
         )["total"] or ZERO
@@ -440,6 +427,10 @@ class Product(models.Model):
                 name="product_stock_quantity_gte_0",
             ),
         ]
+        indexes = [
+            models.Index(fields=["business", "brand"], name="prod_biz_brand_idx"),
+            models.Index(fields=["business", "category"], name="prod_biz_cat_idx"),
+        ]
 
     def __str__(self):
         return f"{self.name} ({self.business.name})"
@@ -471,6 +462,9 @@ class StockMovement(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["product", "-created_at"], name="stock_prod_created_idx"),
+        ]
 
     def __str__(self):
         return f"{self.product.name}: {self.quantity_change:+d} ({self.reason})"
@@ -492,6 +486,9 @@ class Sale(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["business", "-created_at"], name="sale_biz_created_idx"),
+        ]
 
     def __str__(self):
         return f"Sale #{self.pk} — {self.business.name}"
@@ -693,6 +690,10 @@ class Purchase(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["business", "-created_at"], name="purch_biz_created_idx"),
+            models.Index(fields=["business", "-purchase_date"], name="purch_biz_date_idx"),
+        ]
 
     def __str__(self):
         return f"Purchase #{self.pk} — {self.business.name}"
@@ -762,6 +763,9 @@ class Expense(models.Model):
 
     class Meta:
         ordering = ["-date"]
+        indexes = [
+            models.Index(fields=["business", "-date"], name="expense_biz_date_idx"),
+        ]
 
     def __str__(self):
         return f"{self.description} — {self.amount}"
@@ -816,6 +820,11 @@ class Payment(models.Model):
                 ),
                 name="payment_exactly_one_target",
             ),
+        ]
+        indexes = [
+            models.Index(fields=["business", "-created_at"], name="pay_biz_created_idx"),
+            models.Index(fields=["business", "sale"], name="pay_biz_sale_idx"),
+            models.Index(fields=["business", "purchase"], name="pay_biz_purch_idx"),
         ]
 
     def __str__(self):

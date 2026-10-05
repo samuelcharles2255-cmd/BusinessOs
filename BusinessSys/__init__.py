@@ -6,3 +6,5 @@ except ImportError:
         pymysql.install_as_MySQLdb()
     except ImportError:
         pass
+# Package initialization
+

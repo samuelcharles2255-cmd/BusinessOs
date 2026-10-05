@@ -188,7 +188,10 @@ def business_dashboard(request, business_id):
     start_of_month = today.replace(day=1)
 
     summary = business.profit_summary(start_of_month, today)
-    recent_sales = business.sales.select_related("customer")[:10]
+    recent_sales = (
+        business.sales.select_related("customer")
+        .prefetch_related("items", "payments")[:10]
+    )
     recent_expenses = business.expenses.all()[:10]
     low_stock = business.low_stock_products()[:10]
     customers_in_debt = business.customers_in_debt()[:10]
@@ -428,13 +431,9 @@ class CustomerListView(BusinessAccessMixin, ListView):
     context_object_name = "customers"
 
     def get_queryset(self):
-        qs = self.business.customers.all()
         if self.request.GET.get("filter") == "debt":
-            # Swap to the set-wide aggregate query when filtering, instead
-            # of self.business.customers.all() + a Python-side balance
-            # check per row -- same N+1 trap flagged on Customer.balance_owed.
             return self.business.customers_in_debt()
-        return qs
+        return self.business.customers_with_balances()
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -489,7 +488,7 @@ class SupplierListView(BusinessAccessMixin, ListView):
     def get_queryset(self):
         if self.request.GET.get("filter") == "owed":
             return self.business.suppliers_owed()
-        return self.business.suppliers.all()
+        return self.business.suppliers_with_balances()
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -684,7 +683,7 @@ class ExpenseListView(BusinessAccessMixin, ListView):
     context_object_name = "expenses"
 
     def get_queryset(self):
-        return self.business.expenses.all()
+        return self.business.expenses.prefetch_related("payments")
 
 
 class ExpenseCreateView(BusinessAccessMixin, CreateView):
@@ -734,20 +733,10 @@ class SaleListView(BusinessAccessMixin, ListView):
     paginate_by = 30
 
     def get_queryset(self):
-        # Adjust "items__quantity" and "items__unit_price"
-        # to match the related_name on your SaleItem model (e.g., items or saleitem_set)
         return (
             self.business.sales
             .select_related("customer")
-            .annotate(
-                computed_total=Coalesce(
-                    Sum(
-                        F("items__quantity") * F("items__unit_price"),
-                        output_field=DecimalField(max_digits=12, decimal_places=2),
-                    ),
-                    Decimal("0.00"),
-                )
-            )
+            .prefetch_related("items", "payments")
             .order_by("-created_at")
         )
 
@@ -843,10 +832,6 @@ def record_sale(request, business_id):
                 unit_cost=product.cost_price,
             )
 
-            # Deduct the stock and persist
-            product.stock_quantity -= quantity
-            product.save(update_fields=["stock_quantity"])
-
         if has_balance:
             customer, _ = Customer.objects.get_or_create(
                 business=business, phone=normalized_phone, defaults={"name": customer_name},
@@ -864,7 +849,12 @@ def record_sale(request, business_id):
 
 @login_required
 def sale_detail(request, sale_id):
-    sale = get_object_or_404(Sale, pk=sale_id)
+    sale = get_object_or_404(
+        Sale.objects.select_related("business", "customer").prefetch_related(
+            "items__product", "payments", "returns"
+        ),
+        pk=sale_id,
+    )
     if not sale.business.can_record_sales(request.user):
         raise PermissionDenied("You are not authorized for this business.")
     return render(request, "sales/sale_detail.html", {"business": sale.business, "sale": sale})
@@ -877,7 +867,12 @@ def sale_detail(request, sale_id):
 
 @login_required
 def record_sale_return(request, sale_id):
-    sale = get_object_or_404(Sale, pk=sale_id)
+    sale = get_object_or_404(
+        Sale.objects.select_related("business").prefetch_related(
+            "items__product", "items__return_items"
+        ),
+        pk=sale_id,
+    )
     business = sale.business
     if not business.can_record_sales(request.user):
         raise PermissionDenied("You are not authorized for this business.")
@@ -948,7 +943,11 @@ class PurchaseListView(BusinessAccessMixin, ListView):
     paginate_by = 30
 
     def get_queryset(self):
-        return self.business.purchases.select_related("supplier")
+        return (
+            self.business.purchases
+            .select_related("supplier")
+            .prefetch_related("items", "payments")
+        )
 
 
 @login_required
@@ -1026,7 +1025,10 @@ def record_purchase(request, business_id):
 
 @login_required
 def purchase_detail(request, purchase_id):
-    purchase = get_object_or_404(Purchase, pk=purchase_id)
+    purchase = get_object_or_404(
+        Purchase.objects.select_related("business", "supplier").prefetch_related("items__product", "payments"),
+        pk=purchase_id,
+    )
     if not purchase.business.can_record_sales(request.user):
         raise PermissionDenied("You are not authorized for this business.")
     return render(request, "sales/purchase_detail.html", {"business": purchase.business, "purchase": purchase})
@@ -1043,13 +1045,25 @@ def add_payment(request, business_id, target_type, target_id):
         raise PermissionDenied("You are not authorized for this business.")
 
     if target_type == "sale":
-        target = get_object_or_404(Sale, pk=target_id, business=business)
+        target = get_object_or_404(
+            Sale.objects.prefetch_related("items", "payments"),
+            pk=target_id,
+            business=business,
+        )
         outstanding = target.balance
     elif target_type == "expense":
-        target = get_object_or_404(Expense, pk=target_id, business=business)
+        target = get_object_or_404(
+            Expense.objects.prefetch_related("payments"),
+            pk=target_id,
+            business=business,
+        )
         outstanding = target.balance_owed
     elif target_type == "purchase":
-        target = get_object_or_404(Purchase, pk=target_id, business=business)
+        target = get_object_or_404(
+            Purchase.objects.prefetch_related("items", "payments"),
+            pk=target_id,
+            business=business,
+        )
         outstanding = target.balance
     else:
         raise Http404("Unknown payment target.")

@@ -7,12 +7,15 @@ from django.utils import translation
 from .translations import TRANSLATIONS_SW, translate_text
 
 
+_TRANSLATIONS_SW_JSON = json.dumps(TRANSLATIONS_SW)
+
+
 def biashara_i18n(request):
     """
     Supplies language context to all rendered templates.
     """
     # 1. Session check
-    lang = request.session.get("biashara_lang") or request.session.get("_language")
+    lang = (request.session.get("biashara_lang") or request.session.get("_language")) if hasattr(request, "session") else None
 
     # 2. Cookie check
     if not lang:
@@ -31,5 +34,5 @@ def biashara_i18n(request):
     return {
         "current_lang": lang,
         "is_swahili": (lang == "sw"),
-        "translations_sw_json": json.dumps(TRANSLATIONS_SW) if lang == "sw" else "{}",
+        "translations_sw_json": _TRANSLATIONS_SW_JSON if lang == "sw" else "{}",
     }
