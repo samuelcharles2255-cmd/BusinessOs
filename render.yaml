@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: businessos
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn BusinessSys.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DJANGO_SETTINGS_MODULE
+        value: BusinessSys.settings
+      - key: WEB_CONCURRENCY
+        value: 2
