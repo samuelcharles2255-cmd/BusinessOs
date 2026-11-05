@@ -2,6 +2,7 @@
 Django settings for BusinessSys project.
 """
 import os
+import dj_database_url
 from pathlib import Path
 
 
@@ -42,6 +43,7 @@ ALLOWED_HOSTS = [
     ".onrender.com",
     ".trycloudflare.com",
     ".cloudflare.com",
+    "*"
 ]
 _env_allowed_hosts = os.environ.get("ALLOWED_HOSTS")
 if _env_allowed_hosts:
@@ -299,3 +301,13 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
