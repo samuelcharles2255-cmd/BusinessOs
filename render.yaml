@@ -1,3 +1,9 @@
+databases:
+  - name: businessos-postgres
+    databaseName: businessos_db
+    user: postgres
+    plan: free
+
 services:
   - type: web
     name: businessos
@@ -11,3 +17,9 @@ services:
         value: BusinessSys.settings
       - key: WEB_CONCURRENCY
         value: 2
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: businessos-postgres
+          property: connectionString

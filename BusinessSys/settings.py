@@ -21,7 +21,7 @@ if env_file.exists():
             if line and not line.startswith('#') and '=' in line:
                 k, v = line.split('=', 1)
                 v = v.strip().strip("'\"")
-                os.environ[k.strip()] = v
+                os.environ.setdefault(k.strip(), v)
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
@@ -33,8 +33,12 @@ GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-5opaosub89o-t(ft2)7*-d2thot+xsdb!k*t+du%vtsf42+wew')
 
+# Production detection
+IS_PRODUCTION = bool(os.environ.get("RENDER")) or os.environ.get("ENVIRONMENT", "").lower() == "production"
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Automatically False in production (Render) unless explicitly overridden, True in local dev
+DEBUG = os.environ.get("DEBUG", "False" if IS_PRODUCTION else "True").lower() in ("true", "1", "t", "yes")
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -43,11 +47,16 @@ ALLOWED_HOSTS = [
     ".onrender.com",
     ".trycloudflare.com",
     ".cloudflare.com",
-    "*"
 ]
+
+render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_hostname and render_hostname not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_hostname)
+
 _env_allowed_hosts = os.environ.get("ALLOWED_HOSTS")
 if _env_allowed_hosts:
     ALLOWED_HOSTS.extend([h.strip() for h in _env_allowed_hosts.split(",") if h.strip()])
+
 if DEBUG:
     ALLOWED_HOSTS.append("*")
 
@@ -65,6 +74,12 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ]
+
+if render_hostname:
+    render_origin = f"https://{render_hostname}"
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
+
 _env_csrf = os.environ.get("CSRF_TRUSTED_ORIGINS")
 if _env_csrf:
     CSRF_TRUSTED_ORIGINS.extend([c.strip() for c in _env_csrf.split(",") if c.strip()])
@@ -139,26 +154,42 @@ WSGI_APPLICATION = 'BusinessSys.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
-        "NAME": os.environ.get("DB_NAME", "businessos_db"),
-        "USER": os.environ.get("DB_USER", "postgres"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
-        "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
-        "PORT": os.environ.get("DB_PORT", "5432"),
-        "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "600")),
-        "CONN_HEALTH_CHECKS": True,
-    }
-}
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# Support DATABASE_URL if present (e.g. Render / Heroku deployment)
-if os.environ.get("DATABASE_URL"):
-    import dj_database_url
-    DATABASES["default"] = dj_database_url.config(
-        conn_max_age=int(os.environ.get("DB_CONN_MAX_AGE", "600")),
-        conn_health_checks=True,
-    )
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=int(os.environ.get("DB_CONN_MAX_AGE", "600")),
+            conn_health_checks=True,
+        )
+    }
+else:
+    db_host = os.environ.get("DB_HOST", "127.0.0.1")
+    if IS_PRODUCTION and db_host in ("127.0.0.1", "localhost"):
+        import logging
+        logging.getLogger("django.request").warning(
+            "DATABASE_URL not set in production. Falling back to SQLite db.sqlite3 to avoid connection crash."
+        )
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
+    else:
+        DATABASES = {
+            'default': {
+                "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
+                "NAME": os.environ.get("DB_NAME", "businessos_db"),
+                "USER": os.environ.get("DB_USER", "postgres"),
+                "PASSWORD": os.environ.get("DB_PASSWORD", ""),
+                "HOST": db_host,
+                "PORT": os.environ.get("DB_PORT", "5432"),
+                "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "600")),
+                "CONN_HEALTH_CHECKS": True,
+            }
+        }
 
 CACHES = {
     "default": {
